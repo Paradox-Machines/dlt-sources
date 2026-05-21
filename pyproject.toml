@@ -1,0 +1,69 @@
+[build-system]
+requires = ["hatchling>=1.18"]
+build-backend = "hatchling.build"
+
+[project]
+name = "paradoxmachines-dlt-sources"
+version = "0.0.0"   # placeholder; release.yml derives from git tag
+description = "Open-source dlt verified sources maintained by Paradox Machines"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Paradox Machines", email = "opensource@paradoxmachines.com" }]
+keywords = ["dlt", "etl", "data-pipelines", "verified-sources"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "dlt>=1.0,<2",
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "responses>=0.25,<1.0",
+    "ruff>=0.6",
+    "mypy>=1.10",
+    "duckdb>=1.0",
+    "types-requests",
+]
+
+[project.urls]
+Homepage = "https://github.com/paradox-machines/dlt-sources"
+Repository = "https://github.com/paradox-machines/dlt-sources"
+Issues = "https://github.com/paradox-machines/dlt-sources/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["paradox_dlt_sources"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "PL", "SIM"]
+ignore = ["PLR0913"]   # too-many-arguments — dlt sources legitimately have many
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["PLR2004"]  # magic-value-comparison common in assertions
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+
+[[tool.mypy.overrides]]
+module = ["responses.*", "duckdb.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
