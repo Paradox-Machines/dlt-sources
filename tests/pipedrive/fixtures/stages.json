@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Qualified",
+      "pipeline_id": 1,
+      "pipeline_name": "Sales Pipeline",
+      "order_nr": 1,
+      "deal_probability": 20,
+      "rotten_days": null
+    },
+    {
+      "id": 5,
+      "name": "Proposal",
+      "pipeline_id": 1,
+      "pipeline_name": "Sales Pipeline",
+      "order_nr": 3,
+      "deal_probability": 60,
+      "rotten_days": 30
+    }
+  ],
+  "additional_data": {
+    "pagination": {
+      "start": 0,
+      "limit": 100,
+      "more_items_in_collection": false
+    }
+  }
+}

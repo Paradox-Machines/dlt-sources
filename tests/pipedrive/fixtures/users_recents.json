@@ -1,0 +1,36 @@
+{
+  "success": true,
+  "data": [
+    {
+      "item": "user",
+      "id": 10,
+      "data": {
+        "id": 10,
+        "name": "Owner A",
+        "email": "ownera@acme.com",
+        "default_currency": "USD",
+        "timezone_name": "America/New_York",
+        "modified": "2026-01-01 08:00:00"
+      }
+    },
+    {
+      "item": "user",
+      "id": 11,
+      "data": {
+        "id": 11,
+        "name": "Owner B",
+        "email": "ownerb@acme.com",
+        "default_currency": "USD",
+        "timezone_name": "America/Chicago",
+        "modified": "2026-01-02 08:00:00"
+      }
+    }
+  ],
+  "additional_data": {
+    "pagination": {
+      "start": 0,
+      "limit": 100,
+      "more_items_in_collection": false
+    }
+  }
+}

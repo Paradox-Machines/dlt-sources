@@ -1,0 +1,23 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 3,
+      "name": "Carol White",
+      "first_name": "Carol",
+      "org_name": "Gamma Inc",
+      "owner_id": {"id": 10, "name": "Owner A"},
+      "org_id": 102,
+      "email": [{"label": "work", "value": "carol@gamma.com", "primary": true}],
+      "phone": [{"label": "mobile", "value": "+15553003003", "primary": true}],
+      "update_time": "2026-03-10 14:30:00"
+    }
+  ],
+  "additional_data": {
+    "pagination": {
+      "start": 2,
+      "limit": 100,
+      "more_items_in_collection": false
+    }
+  }
+}

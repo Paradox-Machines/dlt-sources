@@ -1,0 +1,22 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": "lead-uuid-1",
+      "title": "Inbound Lead from Site",
+      "source_name": "Website",
+      "owner_id": 10,
+      "creator_id": 10,
+      "person_id": 1,
+      "organization_id": 100,
+      "update_time": "2026-01-20 12:00:00"
+    }
+  ],
+  "additional_data": {
+    "pagination": {
+      "start": 0,
+      "limit": 100,
+      "more_items_in_collection": false
+    }
+  }
+}

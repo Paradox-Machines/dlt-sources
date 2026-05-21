@@ -1,0 +1,25 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 201,
+      "type": "call",
+      "subject": "Discovery call",
+      "owner_name": "Owner A",
+      "due_date": "2026-02-01",
+      "due_time": "10:00",
+      "duration": "00:30",
+      "user_id": 10,
+      "assigned_to_user_id": 10,
+      "company_id": 1,
+      "update_time": "2026-02-01 10:30:00"
+    }
+  ],
+  "additional_data": {
+    "pagination": {
+      "start": 0,
+      "limit": 100,
+      "more_items_in_collection": false
+    }
+  }
+}

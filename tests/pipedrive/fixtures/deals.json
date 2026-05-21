@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 101,
+      "title": "Big Deal",
+      "currency": "USD",
+      "status": "open",
+      "person_name": "Alice Johnson",
+      "owner_name": "Owner A",
+      "stage_id": 5,
+      "pipeline_id": 1,
+      "person_id": 1,
+      "user_id": {"id": 10, "name": "Owner A", "email": "ownera@acme.com"},
+      "creator_user_id": {"id": 10, "name": "Owner A", "email": "ownera@acme.com"},
+      "update_time": "2026-02-15 11:00:00"
+    }
+  ],
+  "additional_data": {
+    "pagination": {
+      "start": 0,
+      "limit": 100,
+      "more_items_in_collection": false
+    }
+  }
+}

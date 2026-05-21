@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 100,
+      "name": "Acme Corp",
+      "owner_name": "Owner A",
+      "update_time": "2026-01-10 09:00:00"
+    }
+  ],
+  "additional_data": {
+    "pagination": {
+      "start": 0,
+      "limit": 100,
+      "more_items_in_collection": false
+    }
+  }
+}
