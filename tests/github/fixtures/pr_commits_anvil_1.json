@@ -1,0 +1,16 @@
+[
+  {
+    "sha": "abc123",
+    "commit": {
+      "message": "Add drop zone implementation",
+      "committer": {
+        "name": "alice",
+        "date": "2026-04-01T09:00:00Z"
+      }
+    },
+    "author": {
+      "login": "alice",
+      "id": 2001
+    }
+  }
+]

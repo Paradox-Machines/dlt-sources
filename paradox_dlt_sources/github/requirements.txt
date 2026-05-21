@@ -1,0 +1,4 @@
+dlt>=1.0,<2
+requests>=2.31
+PyJWT>=2.8
+cryptography>=41

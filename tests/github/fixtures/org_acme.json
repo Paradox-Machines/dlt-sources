@@ -1,0 +1,12 @@
+{
+  "id": 1001,
+  "login": "acme-org",
+  "node_id": "MDEyOk9yZ2FuaXphdGlvbjEwMDE=",
+  "name": "Acme Corp",
+  "description": "We make anvils",
+  "created_at": "2020-01-15T10:00:00Z",
+  "updated_at": "2026-01-01T00:00:00Z",
+  "url": "https://api.github.com/orgs/acme-org",
+  "repos_url": "https://api.github.com/orgs/acme-org/repos",
+  "type": "Organization"
+}
