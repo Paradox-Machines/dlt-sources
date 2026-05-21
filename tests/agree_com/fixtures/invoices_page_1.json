@@ -1,0 +1,92 @@
+{
+  "data": [
+    {
+      "id": "inv-001",
+      "name": "Invoice #1001",
+      "agreement_id": "agr-001",
+      "status": "paid",
+      "amount": {
+        "amount": 150000,
+        "currency": "USD"
+      },
+      "sales_tax_percentage": 8.25,
+      "billing_contact": {
+        "email": "billing@acme.com",
+        "name": "Jane Smith",
+        "company": "Acme Corp"
+      },
+      "customer_id": "cust-001",
+      "organization_id": "org-abc",
+      "destination_organization_id": null,
+      "external_id": "EXT-1001",
+      "external_customer_id": null,
+      "qbo_invoice_id": null,
+      "xero_invoice_id": null,
+      "delivery_method": "email",
+      "payment_type": "ach",
+      "automatic_delivery": true,
+      "recurring_sequence": 1,
+      "inserted_at": "2026-01-15T00:00:00Z",
+      "due_at": "2026-02-01T00:00:00Z",
+      "paid_at": "2026-01-28T11:45:00Z",
+      "sent_at": "2026-01-15T09:00:00Z",
+      "reviewed_at": null,
+      "authorized_at": null,
+      "processing_at": null,
+      "scheduled_at": null,
+      "reminder_scheduled_at": null,
+      "last_reminder_sent_at": null,
+      "memo": "Q1 services",
+      "invoice_url": "https://secure.agree.com/invoices/inv-001",
+      "payment_link": "https://secure.agree.com/pay/inv-001",
+      "subscription_url": null
+    },
+    {
+      "id": "inv-002",
+      "name": "Invoice #1002",
+      "agreement_id": "agr-001",
+      "status": "sent",
+      "amount": {
+        "amount": 75000,
+        "currency": "USD"
+      },
+      "sales_tax_percentage": null,
+      "billing_contact": {
+        "email": "billing@acme.com",
+        "name": "Jane Smith",
+        "company": "Acme Corp"
+      },
+      "customer_id": "cust-001",
+      "organization_id": "org-abc",
+      "destination_organization_id": null,
+      "external_id": null,
+      "external_customer_id": null,
+      "qbo_invoice_id": null,
+      "xero_invoice_id": null,
+      "delivery_method": "email",
+      "payment_type": "card",
+      "automatic_delivery": false,
+      "recurring_sequence": 2,
+      "inserted_at": "2026-02-15T00:00:00Z",
+      "due_at": "2026-03-01T00:00:00Z",
+      "paid_at": null,
+      "sent_at": "2026-02-15T09:00:00Z",
+      "reviewed_at": null,
+      "authorized_at": null,
+      "processing_at": null,
+      "scheduled_at": null,
+      "reminder_scheduled_at": "2026-02-25T09:00:00Z",
+      "last_reminder_sent_at": null,
+      "memo": null,
+      "invoice_url": "https://secure.agree.com/invoices/inv-002",
+      "payment_link": "https://secure.agree.com/pay/inv-002",
+      "subscription_url": null
+    }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 1,
+    "total_count": 2,
+    "page_size": 100
+  }
+}

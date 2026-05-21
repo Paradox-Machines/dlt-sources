@@ -1,0 +1,32 @@
+{
+  "data": [
+    {
+      "id": "agr-003",
+      "name": "Subscription Agreement - Beta LLC",
+      "status": "draft",
+      "version": 1,
+      "organization_id": "org-abc",
+      "invoice_template_id": "tmpl-002",
+      "delivery_mode": "link",
+      "reminder_schedule": null,
+      "payments_enabled": true,
+      "signing_order_enabled": false,
+      "forward_signature_enabled": true,
+      "starts_at": null,
+      "executed_at": null,
+      "ends_at": null,
+      "deleted_at": null,
+      "reminder_scheduled_at": null,
+      "last_reminder_sent_at": null,
+      "docs_url": "https://secure.agree.com/docs/agr-003",
+      "share_url": "https://secure.agree.com/share/agr-003",
+      "preview_url": "https://secure.agree.com/preview/agr-003"
+    }
+  ],
+  "pagination": {
+    "current_page": 2,
+    "total_pages": 2,
+    "total_count": 3,
+    "page_size": 100
+  }
+}

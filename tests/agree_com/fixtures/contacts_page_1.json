@@ -1,0 +1,30 @@
+{
+  "data": [
+    {
+      "id": "con-001",
+      "name": "Jane Smith",
+      "email": "jane.smith@acme.com",
+      "title": "VP of Engineering",
+      "company": "Acme Corp",
+      "organization_id": "org-abc",
+      "inserted_at": "2026-01-05T08:00:00Z",
+      "updated_at": "2026-03-20T14:30:00Z"
+    },
+    {
+      "id": "con-002",
+      "name": "Bob Johnson",
+      "email": "bjohnson@beta.io",
+      "title": "CEO",
+      "company": "Beta LLC",
+      "organization_id": "org-abc",
+      "inserted_at": "2026-02-10T10:15:00Z",
+      "updated_at": "2026-02-10T10:15:00Z"
+    }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 1,
+    "total_count": 2,
+    "page_size": 100
+  }
+}

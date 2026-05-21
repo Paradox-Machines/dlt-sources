@@ -1,0 +1,54 @@
+{
+  "data": [
+    {
+      "id": "agr-001",
+      "name": "Master Services Agreement",
+      "status": "executed",
+      "version": 2,
+      "organization_id": "org-abc",
+      "invoice_template_id": "tmpl-001",
+      "delivery_mode": "email",
+      "reminder_schedule": "weekly",
+      "payments_enabled": true,
+      "signing_order_enabled": false,
+      "forward_signature_enabled": false,
+      "starts_at": "2026-01-01T00:00:00Z",
+      "executed_at": "2026-01-10T12:00:00Z",
+      "ends_at": "2026-12-31T23:59:59Z",
+      "deleted_at": null,
+      "reminder_scheduled_at": null,
+      "last_reminder_sent_at": null,
+      "docs_url": "https://secure.agree.com/docs/agr-001",
+      "share_url": "https://secure.agree.com/share/agr-001",
+      "preview_url": "https://secure.agree.com/preview/agr-001"
+    },
+    {
+      "id": "agr-002",
+      "name": "NDA - Acme Corp",
+      "status": "pending",
+      "version": 1,
+      "organization_id": "org-abc",
+      "invoice_template_id": null,
+      "delivery_mode": "email",
+      "reminder_schedule": null,
+      "payments_enabled": false,
+      "signing_order_enabled": true,
+      "forward_signature_enabled": false,
+      "starts_at": "2026-02-15T00:00:00Z",
+      "executed_at": null,
+      "ends_at": null,
+      "deleted_at": null,
+      "reminder_scheduled_at": "2026-03-01T09:00:00Z",
+      "last_reminder_sent_at": null,
+      "docs_url": "https://secure.agree.com/docs/agr-002",
+      "share_url": "https://secure.agree.com/share/agr-002",
+      "preview_url": "https://secure.agree.com/preview/agr-002"
+    }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "total_pages": 2,
+    "total_count": 3,
+    "page_size": 100
+  }
+}
