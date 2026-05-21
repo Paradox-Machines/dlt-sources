@@ -1,0 +1,34 @@
+name: Bug report
+description: Report a bug in a source
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: source
+    attributes:
+      label: Which source?
+      options:
+        - attio
+        - other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: paradoxmachines-dlt-sources version
+      placeholder: "0.1.0a1"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Include traceback and any relevant API response shapes.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: Minimal pipeline code that triggers the issue.
+    validations:
+      required: true

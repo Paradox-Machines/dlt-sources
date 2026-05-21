@@ -1,0 +1,31 @@
+name: Source request
+description: Request a new source
+labels: ["source-request"]
+body:
+  - type: input
+    id: vendor
+    attributes:
+      label: SaaS vendor / API
+      placeholder: "Greenhouse"
+    validations:
+      required: true
+  - type: input
+    id: api-docs
+    attributes:
+      label: Public API docs URL
+    validations:
+      required: true
+  - type: textarea
+    id: resources
+    attributes:
+      label: Which resources do you need?
+      description: "e.g. candidates, applications, jobs"
+    validations:
+      required: true
+  - type: textarea
+    id: auth
+    attributes:
+      label: Auth model
+      description: API key, OAuth, basic auth, etc.
+    validations:
+      required: true
