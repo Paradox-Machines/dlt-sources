@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  id-token: write   # required for OIDC trusted publishing
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: pip install -e ".[dev]" build twine
+
+      - name: Verify version matches tag
+        run: |
+          TAG="${GITHUB_REF#refs/tags/v}"
+          # hatch-vcs would handle this automatically; for now patch pyproject in-place
+          python -c "
+          import re, sys
+          tag = '${TAG}'
+          with open('pyproject.toml') as f: c = f.read()
+          c = re.sub(r'^version = \".*\"', f'version = \"{tag}\"', c, count=1, flags=re.M)
+          open('pyproject.toml', 'w').write(c)
+          print(f'set pyproject version to {tag}')
+          "
+
+      - name: Lint
+        run: ruff check . && ruff format --check .
+
+      - name: Typecheck
+        run: mypy paradox_dlt_sources/
+
+      - name: Test
+        run: pytest tests/ -v
+
+      - name: Build
+        run: python -m build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        # No `with: password:` — OIDC trusted publisher configured on PyPI side
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: dist/*
