@@ -1,0 +1,19 @@
+{
+  "QueryResponse": {
+    "Invoice": [
+      {
+        "Id": "3",
+        "DocNumber": "INV-003",
+        "TotalAmt": 750.00,
+        "MetaData": {
+          "CreateTime": "2026-03-20T14:00:00-08:00",
+          "LastUpdatedTime": "2026-03-20T14:00:00-08:00"
+        }
+      }
+    ],
+    "startPosition": 1001,
+    "maxResults": 1,
+    "totalCount": 1
+  },
+  "time": "2026-05-21T00:00:00.000-07:00"
+}

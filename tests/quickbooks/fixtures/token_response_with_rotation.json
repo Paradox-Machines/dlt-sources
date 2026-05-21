@@ -1,0 +1,7 @@
+{
+  "access_token": "access-token-v2",
+  "expires_in": 3600,
+  "token_type": "bearer",
+  "x_refresh_token_expires_in": 8726400,
+  "refresh_token": "refresh-token-rotated"
+}
