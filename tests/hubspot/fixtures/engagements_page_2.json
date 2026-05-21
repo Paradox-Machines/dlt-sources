@@ -1,0 +1,20 @@
+{
+  "results": [
+    {
+      "engagement": {
+        "id": 103,
+        "type": "CALL",
+        "timestamp": 1712743200000,
+        "lastUpdated": 1712743200000,
+        "bodyPreview": "Discovery call"
+      },
+      "associations": {
+        "contactIds": [1002],
+        "companyIds": [2001],
+        "dealIds": []
+      }
+    }
+  ],
+  "hasMore": false,
+  "offset": 5002
+}

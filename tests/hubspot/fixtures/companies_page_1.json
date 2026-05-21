@@ -1,0 +1,37 @@
+{
+  "results": [
+    {
+      "id": "co-1",
+      "properties": {
+        "name": "Acme Corp",
+        "domain": "acme.com",
+        "industry": "SOFTWARE",
+        "lifecyclestage": "customer",
+        "createdate": "2026-01-10T09:00:00Z",
+        "hs_lastmodifieddate": "2026-03-15T12:00:00Z"
+      },
+      "createdAt": "2026-01-10T09:00:00Z",
+      "updatedAt": "2026-03-15T12:00:00Z",
+      "archived": false
+    },
+    {
+      "id": "co-2",
+      "properties": {
+        "name": "Beta Inc",
+        "domain": "beta.io",
+        "industry": "TECHNOLOGY",
+        "lifecyclestage": "lead",
+        "createdate": "2026-02-01T11:00:00Z",
+        "hs_lastmodifieddate": "2026-04-01T08:00:00Z"
+      },
+      "createdAt": "2026-02-01T11:00:00Z",
+      "updatedAt": "2026-04-01T08:00:00Z",
+      "archived": false
+    }
+  ],
+  "paging": {
+    "next": {
+      "after": "cursor-companies-page-2"
+    }
+  }
+}

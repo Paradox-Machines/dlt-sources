@@ -1,0 +1,19 @@
+{
+  "results": [
+    {
+      "id": "co-3",
+      "properties": {
+        "name": "Gamma LLC",
+        "domain": "gamma.co",
+        "industry": "FINANCE",
+        "lifecyclestage": "opportunity",
+        "createdate": "2026-03-20T14:00:00Z",
+        "hs_lastmodifieddate": "2026-04-10T10:00:00Z"
+      },
+      "createdAt": "2026-03-20T14:00:00Z",
+      "updatedAt": "2026-04-10T10:00:00Z",
+      "archived": false
+    }
+  ],
+  "paging": {}
+}

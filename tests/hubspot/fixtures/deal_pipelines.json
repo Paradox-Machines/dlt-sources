@@ -1,0 +1,23 @@
+{
+  "results": [
+    {
+      "id": "pipeline-1",
+      "label": "Sales Pipeline",
+      "displayOrder": 0,
+      "stages": [
+        {"id": "stage-1", "label": "Appointment Scheduled", "displayOrder": 0},
+        {"id": "stage-2", "label": "Qualified to Buy", "displayOrder": 1},
+        {"id": "stage-3", "label": "Closed Won", "displayOrder": 2}
+      ]
+    },
+    {
+      "id": "pipeline-2",
+      "label": "Partner Pipeline",
+      "displayOrder": 1,
+      "stages": [
+        {"id": "stage-4", "label": "Initial Contact", "displayOrder": 0},
+        {"id": "stage-5", "label": "Closed", "displayOrder": 1}
+      ]
+    }
+  ]
+}

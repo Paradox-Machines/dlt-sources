@@ -1,0 +1,34 @@
+{
+  "results": [
+    {
+      "engagement": {
+        "id": 101,
+        "type": "NOTE",
+        "timestamp": 1712570400000,
+        "lastUpdated": 1712570400000,
+        "bodyPreview": "Follow-up call notes"
+      },
+      "associations": {
+        "contactIds": [1001, 1002],
+        "companyIds": [2001],
+        "dealIds": [3001]
+      }
+    },
+    {
+      "engagement": {
+        "id": 102,
+        "type": "EMAIL",
+        "timestamp": 1712656800000,
+        "lastUpdated": 1712656800000,
+        "bodyPreview": "Sent intro deck"
+      },
+      "associations": {
+        "contactIds": [1001],
+        "companyIds": [],
+        "dealIds": [3001]
+      }
+    }
+  ],
+  "hasMore": true,
+  "offset": 5000
+}
