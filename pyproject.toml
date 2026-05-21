@@ -22,6 +22,8 @@ classifiers = [
 dependencies = [
     "dlt>=1.0,<2",
     "requests>=2.31",
+    "PyJWT>=2.8",          # used by paradox_dlt_sources.github for App-JWT auth
+    "cryptography>=41",    # PyJWT RS256 dependency
 ]
 
 [project.optional-dependencies]
@@ -33,6 +35,7 @@ dev = [
     "mypy>=1.10",
     "duckdb>=1.0",
     "types-requests",
+    "types-PyJWT",
 ]
 
 [project.urls]
