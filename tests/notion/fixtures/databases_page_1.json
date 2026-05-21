@@ -1,0 +1,52 @@
+{
+  "object": "list",
+  "results": [
+    {
+      "object": "database",
+      "id": "db-1",
+      "created_time": "2026-03-01T09:00:00.000Z",
+      "last_edited_time": "2026-05-15T12:00:00.000Z",
+      "archived": false,
+      "url": "https://www.notion.so/db-1",
+      "parent": {
+        "type": "workspace",
+        "workspace": true
+      },
+      "title": [
+        {
+          "type": "text",
+          "text": { "content": "Deals Pipeline" },
+          "plain_text": "Deals Pipeline"
+        }
+      ],
+      "properties": {
+        "Name": { "id": "title", "type": "title", "title": {} },
+        "Status": { "id": "abc1", "type": "select", "select": {} }
+      }
+    },
+    {
+      "object": "database",
+      "id": "db-2",
+      "created_time": "2026-01-10T08:00:00.000Z",
+      "last_edited_time": "2026-04-20T10:30:00.000Z",
+      "archived": false,
+      "url": "https://www.notion.so/db-2",
+      "parent": {
+        "type": "page_id",
+        "page_id": "page-root"
+      },
+      "title": [
+        {
+          "type": "text",
+          "text": { "content": "Projects" },
+          "plain_text": "Projects"
+        }
+      ],
+      "properties": {
+        "Name": { "id": "title", "type": "title", "title": {} }
+      }
+    }
+  ],
+  "next_cursor": "cursor-db-page-2",
+  "has_more": true
+}

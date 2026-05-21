@@ -1,0 +1,67 @@
+{
+  "object": "list",
+  "results": [
+    {
+      "object": "block",
+      "id": "block-1",
+      "type": "paragraph",
+      "created_time": "2026-04-01T10:00:00.000Z",
+      "last_edited_time": "2026-05-10T14:00:00.000Z",
+      "archived": false,
+      "has_children": false,
+      "parent": {
+        "type": "page_id",
+        "page_id": "page-1"
+      },
+      "paragraph": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": { "content": "This is the deal summary." },
+            "plain_text": "This is the deal summary.",
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "object": "block",
+      "id": "block-2",
+      "type": "heading_1",
+      "created_time": "2026-04-01T10:05:00.000Z",
+      "last_edited_time": "2026-05-08T09:00:00.000Z",
+      "archived": false,
+      "has_children": false,
+      "parent": {
+        "type": "page_id",
+        "page_id": "page-1"
+      },
+      "heading_1": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": { "content": "Next Steps" },
+            "plain_text": "Next Steps",
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "next_cursor": null,
+  "has_more": false
+}

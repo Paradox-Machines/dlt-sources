@@ -1,0 +1,29 @@
+{
+  "object": "list",
+  "results": [
+    {
+      "object": "database",
+      "id": "db-3",
+      "created_time": "2025-11-01T07:00:00.000Z",
+      "last_edited_time": "2026-02-28T15:00:00.000Z",
+      "archived": false,
+      "url": "https://www.notion.so/db-3",
+      "parent": {
+        "type": "workspace",
+        "workspace": true
+      },
+      "title": [
+        {
+          "type": "text",
+          "text": { "content": "Team Wiki" },
+          "plain_text": "Team Wiki"
+        }
+      ],
+      "properties": {
+        "Name": { "id": "title", "type": "title", "title": {} }
+      }
+    }
+  ],
+  "next_cursor": null,
+  "has_more": false
+}

@@ -1,0 +1,29 @@
+{
+  "object": "list",
+  "results": [
+    {
+      "object": "user",
+      "id": "user-1",
+      "type": "person",
+      "name": "Alice Admin",
+      "avatar_url": "https://example.com/avatar1.png",
+      "person": {
+        "email": "alice@example.com"
+      }
+    },
+    {
+      "object": "user",
+      "id": "user-2",
+      "type": "bot",
+      "name": "Integration Bot",
+      "avatar_url": null,
+      "bot": {
+        "owner": {
+          "type": "workspace"
+        }
+      }
+    }
+  ],
+  "next_cursor": null,
+  "has_more": false
+}

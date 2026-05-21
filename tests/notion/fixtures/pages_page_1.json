@@ -1,0 +1,83 @@
+{
+  "object": "list",
+  "results": [
+    {
+      "object": "page",
+      "id": "page-1",
+      "created_time": "2026-04-01T10:00:00.000Z",
+      "last_edited_time": "2026-05-10T14:00:00.000Z",
+      "archived": false,
+      "url": "https://www.notion.so/page-1",
+      "parent": {
+        "type": "database_id",
+        "database_id": "db-1"
+      },
+      "created_by": {
+        "object": "user",
+        "id": "user-1"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "user-1"
+      },
+      "properties": {
+        "Name": {
+          "id": "title",
+          "type": "title",
+          "title": [
+            {
+              "type": "text",
+              "text": { "content": "Q2 Deal: Acme Corp" },
+              "plain_text": "Q2 Deal: Acme Corp"
+            }
+          ]
+        },
+        "Status": {
+          "id": "abc1",
+          "type": "select",
+          "select": { "name": "In Progress", "color": "blue" }
+        },
+        "Deal Value (ARR)": {
+          "id": "xyz9",
+          "type": "number",
+          "number": 120000
+        }
+      }
+    },
+    {
+      "object": "page",
+      "id": "page-2",
+      "created_time": "2026-03-15T09:00:00.000Z",
+      "last_edited_time": "2026-05-05T11:30:00.000Z",
+      "archived": false,
+      "url": "https://www.notion.so/page-2",
+      "parent": {
+        "type": "page_id",
+        "page_id": "page-root"
+      },
+      "created_by": {
+        "object": "user",
+        "id": "user-2"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "user-1"
+      },
+      "properties": {
+        "title": {
+          "id": "title",
+          "type": "title",
+          "title": [
+            {
+              "type": "text",
+              "text": { "content": "Onboarding Notes" },
+              "plain_text": "Onboarding Notes"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "next_cursor": null,
+  "has_more": false
+}
