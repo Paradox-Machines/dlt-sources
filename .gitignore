@@ -40,3 +40,7 @@ htmlcov/
 _dlt/
 .dlt/secrets.toml
 .dlt/.sources
+
+# Stray duckdb files from pytest runs (the tmp_pipeline fixture sometimes leaks)
+*.duckdb
+*.duckdb.wal
