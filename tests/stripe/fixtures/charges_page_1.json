@@ -1,0 +1,36 @@
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "ch_001",
+      "object": "charge",
+      "created": 1700000000,
+      "amount": 5000,
+      "currency": "usd",
+      "customer": "cus_001",
+      "description": "Test charge 1",
+      "invoice": "in_001",
+      "payment_intent": "pi_001",
+      "payment_method": "pm_001",
+      "failure_code": null,
+      "failure_message": null,
+      "status": "succeeded"
+    },
+    {
+      "id": "ch_002",
+      "object": "charge",
+      "created": 1700001000,
+      "amount": 9900,
+      "currency": "usd",
+      "customer": "cus_002",
+      "description": "Test charge 2",
+      "invoice": null,
+      "payment_intent": "pi_002",
+      "payment_method": "pm_002",
+      "failure_code": null,
+      "failure_message": null,
+      "status": "succeeded"
+    }
+  ],
+  "has_more": true
+}

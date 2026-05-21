@@ -1,0 +1,16 @@
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "re_001",
+      "object": "refund",
+      "created": 1700005000,
+      "amount": 5000,
+      "charge": "ch_001",
+      "currency": "usd",
+      "reason": "requested_by_customer",
+      "status": "succeeded"
+    }
+  ],
+  "has_more": false
+}

@@ -1,0 +1,26 @@
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "cus_001",
+      "object": "customer",
+      "created": 1699900000,
+      "email": "alice@example.com",
+      "name": "Alice Smith",
+      "description": "Main account",
+      "phone": "+15551234567",
+      "currency": "usd"
+    },
+    {
+      "id": "cus_002",
+      "object": "customer",
+      "created": 1699950000,
+      "email": "bob@example.com",
+      "name": "Bob Jones",
+      "description": null,
+      "phone": null,
+      "currency": "usd"
+    }
+  ],
+  "has_more": false
+}

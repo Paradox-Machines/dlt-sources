@@ -1,0 +1,47 @@
+{
+  "object": "list",
+  "data": [
+    {
+      "id": "in_001",
+      "object": "invoice",
+      "created": 1700000500,
+      "customer": "cus_001",
+      "customer_email": "alice@example.com",
+      "customer_name": "Alice Smith",
+      "number": "INV-0001",
+      "billing_reason": "subscription_create",
+      "collection_method": "charge_automatically",
+      "subscription": "sub_001",
+      "due_date": null,
+      "status": "paid",
+      "status_transitions": {
+        "paid_at": 1700001000
+      },
+      "metadata": {"bu": "main"}
+    },
+    {
+      "id": "in_002",
+      "object": "invoice",
+      "created": 1700002500,
+      "customer": "cus_002",
+      "customer_email": "bob@example.com",
+      "customer_name": "Bob Jones",
+      "number": "INV-0002",
+      "billing_reason": "subscription_cycle",
+      "collection_method": "charge_automatically",
+      "subscription": null,
+      "due_date": null,
+      "status": "paid",
+      "status_transitions": {
+        "paid_at": 1700003000
+      },
+      "metadata": {},
+      "parent": {
+        "subscription_details": {
+          "subscription": "sub_002"
+        }
+      }
+    }
+  ],
+  "has_more": false
+}
