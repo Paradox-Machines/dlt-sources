@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Coverage for paradox_dlt_sources/github/__init__.py: 95%</title>
+    <title>Coverage for paradox_dlt_sources/github/__init__.py: 96%</title>
     <link rel="icon" sizes="32x32" href="favicon_32_cb_c827f16f.png">
     <link rel="stylesheet" href="style_cb_9ff733b0.css" type="text/css">
     <script src="coverage_html_cb_dd2e7eb5.js" defer></script>
@@ -12,7 +12,7 @@
     <div class="content">
         <h1>
             <span class="text">Coverage for </span><b>paradox_dlt_sources&#8201;/&#8201;github&#8201;/&#8201;__init__.py</b>:
-            <span class="pc_cov">95%</span>
+            <span class="pc_cov">96%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -55,8 +55,8 @@
         </aside>
         <h2>
             <span class="text">130 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">123<span class="text"> run</span></button>
-            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">7<span class="text"> missing</span></button>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">125<span class="text"> run</span></button>
+            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">5<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
         </h2>
         <p class="text">
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_c2024206b90fc286_helpers_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.13.5">coverage.py v7.13.5</a>,
-            created at 2026-05-22 15:51 +0000
+            created at 2026-05-22 19:27 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -247,8 +247,8 @@
     <p class="run"><span class="n"><a id="t165" href="#t165">165</a></span><span class="t">            <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t166" href="#t166">166</a></span><span class="t">                <span class="key">yield</span> <span class="nam">client</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="fst">f"</span><span class="fst">/orgs/</span><span class="op">{</span><span class="nam">org</span><span class="op">}</span><span class="fst">"</span><span class="op">)</span><span class="op">.</span><span class="nam">json</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t167" href="#t167">167</a></span><span class="t">            <span class="key">except</span> <span class="nam">HTTPError</span> <span class="key">as</span> <span class="nam">exc</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t168" href="#t168">168</a></span><span class="t">                <span class="key">if</span> <span class="nam">exc</span><span class="op">.</span><span class="nam">response</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span> <span class="key">and</span> <span class="nam">exc</span><span class="op">.</span><span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span> <span class="key">in</span> <span class="op">(</span><span class="num">403</span><span class="op">,</span> <span class="num">404</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t169" href="#t169">169</a></span><span class="t">                    <span class="key">continue</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t168" href="#t168">168</a></span><span class="t">                <span class="key">if</span> <span class="nam">exc</span><span class="op">.</span><span class="nam">response</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span> <span class="key">and</span> <span class="nam">exc</span><span class="op">.</span><span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span> <span class="key">in</span> <span class="op">(</span><span class="num">403</span><span class="op">,</span> <span class="num">404</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t169" href="#t169">169</a></span><span class="t">                    <span class="key">continue</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t170" href="#t170">170</a></span><span class="t">                <span class="key">raise</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t171" href="#t171">171</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t172" href="#t172">172</a></span><span class="t">    <span class="op">@</span><span class="nam">dlt</span><span class="op">.</span><span class="nam">resource</span><span class="op">(</span><span class="nam">name</span><span class="op">=</span><span class="str">"users"</span><span class="op">,</span> <span class="nam">primary_key</span><span class="op">=</span><span class="str">"id"</span><span class="op">,</span> <span class="nam">write_disposition</span><span class="op">=</span><span class="str">"replace"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -444,7 +444,7 @@
             <a class="nav" href="z_c2024206b90fc286_helpers_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.13.5">coverage.py v7.13.5</a>,
-            created at 2026-05-22 15:51 +0000
+            created at 2026-05-22 19:27 +0000
         </p>
     </div>
 </footer>
