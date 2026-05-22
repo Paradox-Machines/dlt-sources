@@ -3,7 +3,7 @@
 [![PyPI](https://img.shields.io/pypi/v/paradoxmachines-dlt-sources.svg)](https://pypi.org/project/paradoxmachines-dlt-sources/)
 [![Python versions](https://img.shields.io/pypi/pyversions/paradoxmachines-dlt-sources.svg)](https://pypi.org/project/paradoxmachines-dlt-sources/)
 [![CI](https://github.com/Paradox-Machines/dlt-sources/actions/workflows/ci.yml/badge.svg)](https://github.com/Paradox-Machines/dlt-sources/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/Paradox-Machines/dlt-sources/graph/badge.svg)](https://codecov.io/gh/Paradox-Machines/dlt-sources)
+[![Coverage](https://raw.githubusercontent.com/Paradox-Machines/dlt-sources/python-coverage-comment-action-data/badge.svg)](https://github.com/Paradox-Machines/dlt-sources/tree/python-coverage-comment-action-data)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![mypy: strict](https://img.shields.io/badge/mypy-strict-blue.svg)](https://mypy-lang.org/)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](LICENSE)
