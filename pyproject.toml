@@ -70,3 +70,10 @@ ignore_missing_imports = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra --strict-markers"
+
+[tool.coverage.run]
+# Required by py-cov-action so .coverage data files store relative paths
+# (the action reads them on a different runner and can't resolve absolute
+# /home/runner/... paths from the test job).
+relative_files = true
+source = ["paradox_dlt_sources"]
