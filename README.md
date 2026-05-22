@@ -11,13 +11,13 @@
 | paradox\_dlt\_sources/attio/\_\_init\_\_.py      |       56 |        0 |    100% |           |
 | paradox\_dlt\_sources/attio/helpers.py           |       66 |        2 |     97% |  109, 145 |
 | paradox\_dlt\_sources/attio/settings.py          |        6 |        0 |    100% |           |
-| paradox\_dlt\_sources/github/\_\_init\_\_.py     |      130 |       35 |     73% |148-151, 167-170, 187, 218-219, 222-226, 256-257, 260-264, 290-293, 320-323, 338-341 |
+| paradox\_dlt\_sources/github/\_\_init\_\_.py     |      130 |        7 |     95% |168-170, 338-341 |
 | paradox\_dlt\_sources/github/helpers.py          |       40 |        0 |    100% |           |
 | paradox\_dlt\_sources/github/settings.py         |        7 |        0 |    100% |           |
 | paradox\_dlt\_sources/hubspot/\_\_init\_\_.py    |       43 |        0 |    100% |           |
 | paradox\_dlt\_sources/hubspot/helpers.py         |       30 |        1 |     97% |        63 |
 | paradox\_dlt\_sources/hubspot/settings.py        |        9 |        0 |    100% |           |
-| paradox\_dlt\_sources/notion/\_\_init\_\_.py     |       77 |       12 |     84% |265-266, 269, 309-310, 315, 356, 367, 400-403 |
+| paradox\_dlt\_sources/notion/\_\_init\_\_.py     |       77 |        2 |     97% |  367, 403 |
 | paradox\_dlt\_sources/notion/helpers.py          |       25 |        0 |    100% |           |
 | paradox\_dlt\_sources/notion/settings.py         |        9 |        0 |    100% |           |
 | paradox\_dlt\_sources/pipedrive/\_\_init\_\_.py  |       43 |        1 |     98% |       196 |
@@ -29,7 +29,7 @@
 | paradox\_dlt\_sources/stripe/\_\_init\_\_.py     |       29 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/helpers.py          |       48 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/settings.py         |        3 |        0 |    100% |           |
-| **TOTAL**                                        |  **869** |   **52** | **94%** |           |
+| **TOTAL**                                        |  **869** |   **14** | **98%** |           |
 
 
 ## Setup coverage badge
