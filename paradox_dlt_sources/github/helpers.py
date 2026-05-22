@@ -114,6 +114,22 @@ class GitHubPATAuth(AuthBase):
         return request
 
 
+def _raise_on_http_error(response: requests.Response, *args: object, **kwargs: object) -> None:
+    """Session-level response hook that turns 4xx/5xx into ``HTTPError``.
+
+    Without this, dlt's ``RESTClient.get(...)`` returns the response object
+    even on error statuses — the caller then does ``.json()`` on the body
+    and silently yields the error payload as a data row. The
+    ``try/except HTTPError`` blocks scattered through this source assume
+    auto-raise behavior; this hook makes that assumption true.
+
+    (``RESTClient.paginate(...)`` already installs its own ``raise_for_status``
+    handler internally, so this hook is redundant on the paginated path but
+    not double-raising — ``raise_for_status`` is idempotent.)
+    """
+    response.raise_for_status()
+
+
 def make_client(auth: AuthBase) -> RESTClient:
     """Return a ``RESTClient`` pre-configured for the GitHub REST API.
 
@@ -124,6 +140,8 @@ def make_client(auth: AuthBase) -> RESTClient:
         auth: An ``AuthBase`` instance — either ``GitHubAppAuth`` or
             ``GitHubPATAuth``.
     """
+    session = requests.Session()
+    session.hooks["response"].append(_raise_on_http_error)
     return RESTClient(
         base_url=GITHUB_API_BASE_URL,
         auth=auth,
@@ -132,6 +150,7 @@ def make_client(auth: AuthBase) -> RESTClient:
             "Accept": "application/vnd.github+json",
             "X-GitHub-Api-Version": "2022-11-28",
         },
+        session=session,
     )
 
 

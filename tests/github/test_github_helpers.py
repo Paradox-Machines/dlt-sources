@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import pytest
+import requests
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from dlt.sources.helpers.rest_client.client import RESTClient
 from dlt.sources.helpers.rest_client.paginators import HeaderLinkPaginator
+from requests.adapters import HTTPAdapter
+from requests.exceptions import HTTPError
 
 from paradox_dlt_sources.github import github_source
 from paradox_dlt_sources.github.helpers import (
@@ -57,6 +60,38 @@ class TestMakeClient:
         client = make_client(auth)
         headers = client.headers or {}
         assert headers.get("X-GitHub-Api-Version") == "2022-11-28"
+
+    def test_get_raises_http_error_on_4xx_response(self) -> None:
+        # Regression: prior to the response-hook fix, dlt RESTClient.get() did
+        # not raise on 4xx — error bodies (e.g. GitHub rate-limit JSON with
+        # `message`/`documentation_url`/`status` fields) silently got yielded
+        # as data rows by every `client.get(...).json()` callsite in the
+        # github resource. The session-level hook installed by `make_client`
+        # forces auto-raise behavior so the existing `try/except HTTPError`
+        # blocks work as designed.
+        rate_limit_body = (
+            b'{"message":"API rate limit exceeded for user ID 1839452",'
+            b'"documentation_url":"https://docs.github.com/en/rest/.../rate-limiting",'
+            b'"status":"403"}'
+        )
+
+        class _RateLimitAdapter(HTTPAdapter):
+            def send(self, request, **kwargs):  # type: ignore[override]
+                r = requests.Response()
+                r.status_code = 403
+                r._content = rate_limit_body
+                r.headers["Content-Type"] = "application/json"
+                r.request = request
+                return r
+
+        auth = GitHubPATAuth("ghp_test")
+        client = make_client(auth)
+        client.session.mount("https://", _RateLimitAdapter())
+
+        with pytest.raises(HTTPError) as exc_info:
+            client.get("/orgs/anything")
+        assert exc_info.value.response is not None
+        assert exc_info.value.response.status_code == 403
 
 
 # ---------------------------------------------------------------------------
