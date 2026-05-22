@@ -276,7 +276,10 @@ def test_repo_full_names_skips_403_and_404(tmp_pipeline):  # type: ignore[no-unt
     responses.mock.add(
         responses.GET,
         f"{_BASE}/orgs/{_ORG}/repos",
-        json={"message": "Resource not accessible by integration", "documentation_url": "https://docs.github.com"},
+        json={
+            "message": "Resource not accessible by integration",
+            "documentation_url": "https://docs.github.com",
+        },
         status=403,
     )
     responses.mock.add(
@@ -290,7 +293,10 @@ def test_repo_full_names_skips_403_and_404(tmp_pipeline):  # type: ignore[no-unt
     responses.mock.add(
         responses.GET,
         f"{_BASE}/orgs/{_ORG}/repos",
-        json={"message": "Resource not accessible by integration", "documentation_url": "https://docs.github.com"},
+        json={
+            "message": "Resource not accessible by integration",
+            "documentation_url": "https://docs.github.com",
+        },
         status=403,
     )
     responses.mock.add(
@@ -372,7 +378,10 @@ def test_organizations_skips_404(tmp_pipeline):  # type: ignore[no-untyped-def]
 
 @responses.activate
 def test_users_reraises_on_unexpected_status(tmp_pipeline):  # type: ignore[no-untyped-def]
-    """A non-403 status on /orgs/{org}/members must be re-raised (propagates as PipelineStepFailed)."""
+    """A non-403 status on /orgs/{org}/members must be re-raised.
+
+    Propagates as PipelineStepFailed.
+    """
     responses.mock.add(
         responses.GET, f"{_BASE}/orgs/{_ORG}", json=load_fixture("github", "org_acme")
     )
@@ -405,7 +414,10 @@ def test_repositories_skips_403_and_404(tmp_pipeline):  # type: ignore[no-untype
     responses.mock.add(
         responses.GET,
         f"{_BASE}/orgs/{_ORG}/repos",
-        json={"message": "Resource not accessible by integration", "documentation_url": "https://docs.github.com"},
+        json={
+            "message": "Resource not accessible by integration",
+            "documentation_url": "https://docs.github.com",
+        },
         status=403,
     )
     responses.mock.add(
@@ -437,24 +449,28 @@ def test_repositories_cursor_early_termination(tmp_pipeline):  # type: ignore[no
     with responses.RequestsMock(assert_all_requests_are_fired=False) as rsps:
         rsps.add(responses.GET, f"{_BASE}/orgs/{_ORG}", json=load_fixture("github", "org_acme"))
         rsps.add(responses.GET, f"{_BASE}/orgs/{_ORG}/members", json=[])
-        rsps.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=_repo_stub)   # _repo_full_names
-        rsps.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=_repo_stub)   # repositories crawl
+        rsps.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=_repo_stub)  # _repo_full_names
+        rsps.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=_repo_stub)  # repositories crawl
         rsps.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/pulls", json=[])
         rsps.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/commits", json=[])
         tmp_pipeline.run(github_source(org_logins=[_ORG], pat_token=_PAT))
 
     # ── Run 2: threshold = "2026-04-01T12:00:00Z" ────────────────────────
     _catapult = {
-        "id": 3003, "name": "catapult", "full_name": "acme-org/catapult",
-        "pushed_at": "2026-05-01T00:00:00Z", "updated_at": "2026-05-01T00:00:00Z", "size": 200,
+        "id": 3003,
+        "name": "catapult",
+        "full_name": "acme-org/catapult",
+        "pushed_at": "2026-05-01T00:00:00Z",
+        "updated_at": "2026-05-01T00:00:00Z",
+        "size": 200,
     }
     _run2 = [_catapult, {**_REPO_ANVIL}]  # catapult above, anvil == threshold
 
     with responses.RequestsMock(assert_all_requests_are_fired=False) as rsps:
         rsps.add(responses.GET, f"{_BASE}/orgs/{_ORG}", json=load_fixture("github", "org_acme"))
         rsps.add(responses.GET, f"{_BASE}/orgs/{_ORG}/members", json=[])
-        rsps.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=_run2)   # _repo_full_names
-        rsps.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=_run2)   # repositories crawl
+        rsps.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=_run2)  # _repo_full_names
+        rsps.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=_run2)  # repositories crawl
         # PR + commit calls for both repos in cache
         for repo in ("acme-org/catapult", "acme-org/anvil"):
             rsps.add(responses.GET, f"{_BASE}/repos/{repo}/pulls", json=[])
@@ -465,15 +481,15 @@ def test_repositories_cursor_early_termination(tmp_pipeline):  # type: ignore[no
     with tmp_pipeline.sql_client() as client:
         rows = client.execute_sql("SELECT id FROM repositories ORDER BY id")
     ids = [r[0] for r in rows]
-    assert 3003 in ids              # catapult: above threshold → yielded on run 2
-    assert ids.count(3001) == 1     # anvil: at threshold → NOT re-yielded on run 2, only from run 1
+    assert 3003 in ids  # catapult: above threshold → yielded on run 2
+    assert ids.count(3001) == 1  # anvil: at threshold → NOT re-yielded on run 2, only from run 1
 
 
 @responses.activate
 def test_repositories_reraises_on_unexpected_status(tmp_pipeline):  # type: ignore[no-untyped-def]
     """A 500 on /orgs/{org}/repos (repositories incremental crawl) must be re-raised."""
     _stub_all_orgs_except_repos([_ORG])
-    responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=[])   # _repo_full_names
+    responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=[])  # _repo_full_names
     responses.mock.add(
         responses.GET,
         f"{_BASE}/orgs/{_ORG}/repos",
@@ -494,20 +510,28 @@ def test_repositories_reraises_on_unexpected_status(tmp_pipeline):  # type: igno
 def test_pull_requests_skips_404_and_409(tmp_pipeline):  # type: ignore[no-untyped-def]
     """pull_requests skips repos on 404 and 409 (empty repo race)."""
     _ghost = {
-        "id": 3002, "name": "ghost", "full_name": "acme-org/ghost",
-        "pushed_at": "2026-03-01T12:00:00Z", "updated_at": "2026-03-01T12:00:00Z", "size": 50,
+        "id": 3002,
+        "name": "ghost",
+        "full_name": "acme-org/ghost",
+        "pushed_at": "2026-03-01T12:00:00Z",
+        "updated_at": "2026-03-01T12:00:00Z",
+        "size": 50,
     }
     _repos = [_REPO_ANVIL, _ghost]
     _stub_all_orgs_except_repos([_ORG])
-    responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=_repos)   # _repo_full_names
-    responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=_repos)   # repositories
+    responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=_repos)  # _repo_full_names
+    responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=_repos)  # repositories
     responses.mock.add(
-        responses.GET, f"{_BASE}/repos/acme-org/anvil/pulls",
-        json={"message": "Not Found"}, status=404,
+        responses.GET,
+        f"{_BASE}/repos/acme-org/anvil/pulls",
+        json={"message": "Not Found"},
+        status=404,
     )
     responses.mock.add(
-        responses.GET, f"{_BASE}/repos/acme-org/ghost/pulls",
-        json={"message": "Git Repository is empty."}, status=409,
+        responses.GET,
+        f"{_BASE}/repos/acme-org/ghost/pulls",
+        json={"message": "Git Repository is empty."},
+        status=409,
     )
     responses.mock.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/commits", json=[])
     responses.mock.add(responses.GET, f"{_BASE}/repos/acme-org/ghost/commits", json=[])
@@ -527,11 +551,15 @@ def test_pull_requests_cursor_early_termination(tmp_pipeline):  # type: ignore[n
     Only PR-4002 should appear in the second run's rows.
     """
     _repos = [_REPO_ANVIL]
-    _pr_seed = [{
-        "id": 4001, "number": 1, "updated_at": "2026-04-01T10:00:00Z",
-        "base": {"repo": {"full_name": "acme-org/anvil", "id": 3001}},
-        "head": {"ref": "a", "sha": "aaa"},
-    }]
+    _pr_seed = [
+        {
+            "id": 4001,
+            "number": 1,
+            "updated_at": "2026-04-01T10:00:00Z",
+            "base": {"repo": {"full_name": "acme-org/anvil", "id": 3001}},
+            "head": {"ref": "a", "sha": "aaa"},
+        }
+    ]
 
     # ── Run 1 ────────────────────────────────────────────────────────────
     with responses.RequestsMock(assert_all_requests_are_fired=False) as rsps:
@@ -542,14 +570,24 @@ def test_pull_requests_cursor_early_termination(tmp_pipeline):  # type: ignore[n
         rsps.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/pulls", json=_pr_seed)
         rsps.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/commits", json=[])
         rsps.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/pulls/1/commits", json=[])
-        rsps.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/pulls/1", json={
-            **_pr_seed[0], "additions": 0, "deletions": 0, "changed_files": 0, "commits": 0,
-        })
+        rsps.add(
+            responses.GET,
+            f"{_BASE}/repos/acme-org/anvil/pulls/1",
+            json={
+                **_pr_seed[0],
+                "additions": 0,
+                "deletions": 0,
+                "changed_files": 0,
+                "commits": 0,
+            },
+        )
         tmp_pipeline.run(github_source(org_logins=[_ORG], pat_token=_PAT))
 
     # ── Run 2: threshold = "2026-04-01T10:00:00Z" ────────────────────────
     _pr_new = {
-        "id": 4002, "number": 2, "updated_at": "2026-05-01T00:00:00Z",
+        "id": 4002,
+        "number": 2,
+        "updated_at": "2026-05-01T00:00:00Z",
         "base": {"repo": {"full_name": "acme-org/anvil", "id": 3001}},
         "head": {"ref": "b", "sha": "bbb"},
     }
@@ -563,16 +601,24 @@ def test_pull_requests_cursor_early_termination(tmp_pipeline):  # type: ignore[n
         rsps.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/pulls", json=_pr_run2)
         rsps.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/commits", json=[])
         rsps.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/pulls/2/commits", json=[])
-        rsps.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/pulls/2", json={
-            **_pr_new, "additions": 5, "deletions": 2, "changed_files": 1, "commits": 1,
-        })
+        rsps.add(
+            responses.GET,
+            f"{_BASE}/repos/acme-org/anvil/pulls/2",
+            json={
+                **_pr_new,
+                "additions": 5,
+                "deletions": 2,
+                "changed_files": 1,
+                "commits": 1,
+            },
+        )
         info = tmp_pipeline.run(github_source(org_logins=[_ORG], pat_token=_PAT))
 
     assert not info.has_failed_jobs
     with tmp_pipeline.sql_client() as client:
         rows = client.execute_sql("SELECT id FROM pull_requests ORDER BY id")
     ids = [r[0] for r in rows]
-    assert 4002 in ids          # new PR: above threshold → yielded on run 2
+    assert 4002 in ids  # new PR: above threshold → yielded on run 2
     assert ids.count(4001) == 1  # only from run 1; not re-yielded on run 2
 
 
@@ -583,8 +629,10 @@ def test_pull_requests_reraises_on_unexpected_status(tmp_pipeline):  # type: ign
     responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=[_REPO_ANVIL])
     responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=[_REPO_ANVIL])
     responses.mock.add(
-        responses.GET, f"{_BASE}/repos/acme-org/anvil/pulls",
-        json={"message": "Internal Server Error"}, status=500,
+        responses.GET,
+        f"{_BASE}/repos/acme-org/anvil/pulls",
+        json={"message": "Internal Server Error"},
+        status=500,
     )
     responses.mock.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/commits", json=[])
 
@@ -601,8 +649,12 @@ def test_pull_requests_reraises_on_unexpected_status(tmp_pipeline):  # type: ign
 def test_commits_skips_404_and_409(tmp_pipeline):  # type: ignore[no-untyped-def]
     """commits skips repos on 404 and 409."""
     _ghost = {
-        "id": 3002, "name": "ghost", "full_name": "acme-org/ghost",
-        "pushed_at": "2026-03-01T00:00:00Z", "updated_at": "2026-03-01T00:00:00Z", "size": 10,
+        "id": 3002,
+        "name": "ghost",
+        "full_name": "acme-org/ghost",
+        "pushed_at": "2026-03-01T00:00:00Z",
+        "updated_at": "2026-03-01T00:00:00Z",
+        "size": 10,
     }
     _repos = [_REPO_ANVIL, _ghost]
     _stub_all_orgs_except_repos([_ORG])
@@ -611,12 +663,16 @@ def test_commits_skips_404_and_409(tmp_pipeline):  # type: ignore[no-untyped-def
     responses.mock.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/pulls", json=[])
     responses.mock.add(responses.GET, f"{_BASE}/repos/acme-org/ghost/pulls", json=[])
     responses.mock.add(
-        responses.GET, f"{_BASE}/repos/acme-org/anvil/commits",
-        json={"message": "Not Found"}, status=404,
+        responses.GET,
+        f"{_BASE}/repos/acme-org/anvil/commits",
+        json={"message": "Not Found"},
+        status=404,
     )
     responses.mock.add(
-        responses.GET, f"{_BASE}/repos/acme-org/ghost/commits",
-        json={"message": "Git Repository is empty."}, status=409,
+        responses.GET,
+        f"{_BASE}/repos/acme-org/ghost/commits",
+        json={"message": "Git Repository is empty."},
+        status=409,
     )
 
     info = tmp_pipeline.run(github_source(org_logins=[_ORG], pat_token=_PAT))
@@ -633,8 +689,10 @@ def test_commits_reraises_on_unexpected_status(tmp_pipeline):  # type: ignore[no
     responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=[_REPO_ANVIL])
     responses.mock.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/pulls", json=[])
     responses.mock.add(
-        responses.GET, f"{_BASE}/repos/acme-org/anvil/commits",
-        json={"message": "Internal Server Error"}, status=500,
+        responses.GET,
+        f"{_BASE}/repos/acme-org/anvil/commits",
+        json={"message": "Internal Server Error"},
+        status=500,
     )
 
     with pytest.raises(Exception, match="500"):
@@ -656,7 +714,9 @@ _FAKE_PR: dict = {
 
 def _pr_commits_setup(pr: dict) -> None:
     """Register minimal mocks to drive one PR through the transformer chain."""
-    responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}", json=load_fixture("github", "org_acme"))
+    responses.mock.add(
+        responses.GET, f"{_BASE}/orgs/{_ORG}", json=load_fixture("github", "org_acme")
+    )
     responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/members", json=[])
     responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=[_REPO_ANVIL])
     responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=[_REPO_ANVIL])
@@ -664,14 +724,25 @@ def _pr_commits_setup(pr: dict) -> None:
     responses.mock.add(responses.GET, f"{_BASE}/repos/acme-org/anvil/commits", json=[])
 
 
-@pytest.mark.parametrize("status,error_body", [
-    (403, {"message": "Resource not accessible by integration", "documentation_url": "https://docs.github.com"}),
-    (404, {"message": "Not Found"}),
-    (409, {"message": "Git Repository is empty."}),
-])
+@pytest.mark.parametrize(
+    "status,error_body",
+    [
+        (
+            403,
+            {
+                "message": "Resource not accessible by integration",
+                "documentation_url": "https://docs.github.com",
+            },
+        ),
+        (404, {"message": "Not Found"}),
+        (409, {"message": "Git Repository is empty."}),
+    ],
+)
 @responses.activate
 def test_pull_request_commits_skips_on_status(
-    status: int, error_body: dict, tmp_pipeline  # type: ignore[no-untyped-def]
+    status: int,
+    error_body: dict,
+    tmp_pipeline,  # type: ignore[no-untyped-def]
 ) -> None:
     """pull_request_commits silently skips on 403, 404, or 409."""
     _pr_commits_setup(_FAKE_PR)
@@ -725,7 +796,9 @@ def test_pull_request_commits_reraises_on_unexpected_status(tmp_pipeline):  # ty
 
 def _pr_stats_setup(pr: dict) -> None:
     """Mocks that drive one PR to pull_request_stats; pull_request_commits → empty."""
-    responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}", json=load_fixture("github", "org_acme"))
+    responses.mock.add(
+        responses.GET, f"{_BASE}/orgs/{_ORG}", json=load_fixture("github", "org_acme")
+    )
     responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/members", json=[])
     responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=[_REPO_ANVIL])
     responses.mock.add(responses.GET, f"{_BASE}/orgs/{_ORG}/repos", json=[_REPO_ANVIL])

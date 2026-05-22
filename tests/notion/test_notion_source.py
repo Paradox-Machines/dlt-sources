@@ -664,7 +664,12 @@ def test_blocks_reraises_on_non_404():
     responses.mock.add(
         responses.GET,
         f"{_BASE}/v1/blocks/page-y/children",
-        json={"object": "error", "status": 500, "code": "internal_server_error", "message": "An unexpected error occurred"},
+        json={
+            "object": "error",
+            "status": 500,
+            "code": "internal_server_error",
+            "message": "An unexpected error occurred",
+        },
         status=500,
     )
 
@@ -700,14 +705,24 @@ def test_comments_skips_on_404(tmp_pipeline):
     responses.mock.add(
         responses.GET,
         f"{_BASE}/v1/blocks/page-2/children",
-        json={"object": "error", "status": 404, "code": "object_not_found", "message": "Could not find block with ID: page-2"},
+        json={
+            "object": "error",
+            "status": 404,
+            "code": "object_not_found",
+            "message": "Could not find block with ID: page-2",
+        },
         status=404,
     )
     # block-1 → 404 on comments (no comment access)
     responses.mock.add(
         responses.GET,
         f"{_BASE}/v1/comments",
-        json={"object": "error", "status": 404, "code": "object_not_found", "message": "Could not find block with ID: block-1"},
+        json={
+            "object": "error",
+            "status": 404,
+            "code": "object_not_found",
+            "message": "Could not find block with ID: block-1",
+        },
         status=404,
     )
     # block-2 → empty comments (normal)
@@ -740,7 +755,9 @@ def test_comments_reraises_on_non_404():
             "object": "error",
             "status": 400,
             "code": "unauthorized_capability",
-            "message": "The provided token does not have the required capability to perform this action.",
+            "message": (
+                "The provided token does not have the required capability to perform this action."
+            ),
         },
         status=400,
     )
