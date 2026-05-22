@@ -13,7 +13,6 @@ Then:
 from __future__ import annotations
 
 import dlt
-
 from attio import attio_source
 
 

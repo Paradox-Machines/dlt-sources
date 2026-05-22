@@ -21,7 +21,6 @@ Then:
 from __future__ import annotations
 
 import dlt
-
 from github import github_source
 
 

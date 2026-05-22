@@ -13,7 +13,6 @@ Then:
 from __future__ import annotations
 
 import dlt
-
 from hubspot import hubspot_source
 
 

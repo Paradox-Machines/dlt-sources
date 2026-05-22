@@ -13,7 +13,6 @@ Then:
 from __future__ import annotations
 
 import dlt
-
 from stripe import stripe_source
 
 

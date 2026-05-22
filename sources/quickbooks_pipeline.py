@@ -16,7 +16,6 @@ Then:
 from __future__ import annotations
 
 import dlt
-
 from quickbooks import quickbooks_source
 
 
