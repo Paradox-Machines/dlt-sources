@@ -46,6 +46,11 @@ Issues = "https://github.com/paradox-machines/dlt-sources/issues"
 [tool.hatch.build.targets.wheel]
 packages = ["paradox_dlt_sources"]
 
+[tool.hatch.build.targets.sdist]
+# sources/ is a generated mirror of paradox_dlt_sources/ for dlt init
+# discoverability — no need to ship it inside the source distribution.
+exclude = ["sources", "examples", "tests"]
+
 [tool.ruff]
 target-version = "py311"
 line-length = 100
