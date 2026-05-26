@@ -48,6 +48,9 @@ def columns(
     *,
     text: tuple[str, ...] = (),
     bigint: tuple[str, ...] = (),
+    decimal: tuple[str, ...] = (),
+    boolean: tuple[str, ...] = (),
+    timestamp: tuple[str, ...] = (),
 ) -> dict[str, dict[str, Any]]:
     """Build a ``@dlt.resource(columns=...)`` map of nullable hints.
 
@@ -56,12 +59,25 @@ def columns(
     exists regardless of data shape.  Each column gets its own dict
     instance — dlt mutates these (assigns ``name``) and sharing a single
     dict across columns silently merges them.
+
+    Supported dlt data types are exposed via keyword groups:
+        text       → "text"
+        bigint     → "bigint"
+        decimal    → "decimal"     (money/quantity fields, e.g. QBO qty_on_hand)
+        boolean    → "bool"        (named ``boolean`` so it doesn't shadow ``bool``)
+        timestamp  → "timestamp"
     """
     out: dict[str, dict[str, Any]] = {}
     for c in text:
         out[c] = nullable_column("text")
     for c in bigint:
         out[c] = nullable_column("bigint")
+    for c in decimal:
+        out[c] = nullable_column("decimal")
+    for c in boolean:
+        out[c] = nullable_column("bool")
+    for c in timestamp:
+        out[c] = nullable_column("timestamp")
     return out
 
 

@@ -568,10 +568,40 @@ def test_columns_builds_bigint_hints() -> None:
     assert out == {"amount_cents": {"data_type": "bigint", "nullable": True}}
 
 
+def test_columns_builds_decimal_hints() -> None:
+    out = columns(decimal=("qty_on_hand", "unit_price"))
+    assert out == {
+        "qty_on_hand": {"data_type": "decimal", "nullable": True},
+        "unit_price": {"data_type": "decimal", "nullable": True},
+    }
+
+
+def test_columns_builds_boolean_hints() -> None:
+    out = columns(boolean=("active", "taxable"))
+    assert out == {
+        "active": {"data_type": "bool", "nullable": True},
+        "taxable": {"data_type": "bool", "nullable": True},
+    }
+
+
+def test_columns_builds_timestamp_hints() -> None:
+    out = columns(timestamp=("created_at",))
+    assert out == {"created_at": {"data_type": "timestamp", "nullable": True}}
+
+
 def test_columns_builds_mixed_hints() -> None:
-    out = columns(text=("name",), bigint=("count",))
+    out = columns(
+        text=("name",),
+        bigint=("count",),
+        decimal=("price",),
+        boolean=("active",),
+        timestamp=("created_at",),
+    )
     assert out["name"]["data_type"] == "text"
     assert out["count"]["data_type"] == "bigint"
+    assert out["price"]["data_type"] == "decimal"
+    assert out["active"]["data_type"] == "bool"
+    assert out["created_at"]["data_type"] == "timestamp"
 
 
 def test_columns_each_entry_is_independent_dict() -> None:
