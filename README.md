@@ -24,12 +24,12 @@
 | paradox\_dlt\_sources/pipedrive/helpers.py       |       46 |        0 |    100% |           |
 | paradox\_dlt\_sources/pipedrive/settings.py      |        7 |        0 |    100% |           |
 | paradox\_dlt\_sources/quickbooks/\_\_init\_\_.py |       47 |        0 |    100% |           |
-| paradox\_dlt\_sources/quickbooks/helpers.py      |       79 |        1 |     99% |       247 |
+| paradox\_dlt\_sources/quickbooks/helpers.py      |       85 |        1 |     99% |       263 |
 | paradox\_dlt\_sources/quickbooks/settings.py     |        8 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/\_\_init\_\_.py     |       29 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/helpers.py          |       48 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/settings.py         |        3 |        0 |    100% |           |
-| **TOTAL**                                        |  **873** |   **12** | **99%** |           |
+| **TOTAL**                                        |  **879** |   **12** | **99%** |           |
 
 
 ## Setup coverage badge
