@@ -99,6 +99,26 @@ _INCREMENTAL_RESOURCE_COLUMNS: dict[str, dict[str, dict[str, Any]]] = {
             "asset_account_ref__value",
             "sku",
         ),
+        # QBO returns `QtyOnHand` only when `TrackQtyOnHand=true` — and
+        # `UnitPrice` is similarly sparse for non-inventoried items. The
+        # downstream dbt staging model (`stg_quickbooks__items.sql`)
+        # `try_cast`s these to decimal; without an up-front hint dlt
+        # drops the column from the parquet schema in batches that
+        # contain only non-tracked items, breaking the cast at parse
+        # time. Forcing nullable hints keeps the column present.
+        decimal=(
+            "unit_price",
+            "qty_on_hand",
+        ),
+        boolean=(
+            "track_qty_on_hand",
+            "taxable",
+            "active",
+        ),
+        timestamp=(
+            "meta_data__create_time",
+            "meta_data__last_updated_time",
+        ),
     ),
     "accounts": columns(
         text=(
