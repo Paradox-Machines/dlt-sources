@@ -1,0 +1,14 @@
+{
+  "jobs": [
+    {
+      "id": "lx-job-003",
+      "title": "Staff Frontend Engineer",
+      "status": "open",
+      "location": "San Francisco, CA",
+      "company_name": "Example Corp",
+      "created_at": "2026-03-20T11:00:00Z",
+      "updated_at": "2026-04-24T10:00:00Z"
+    }
+  ],
+  "total": 2
+}

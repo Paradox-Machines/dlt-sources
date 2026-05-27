@@ -1,0 +1,24 @@
+{
+  "deals": [
+    {
+      "id": "lx-deal-001",
+      "name": "Example Corp - Q2 Placement",
+      "stage": "negotiation",
+      "amount": 25000,
+      "currency": "USD",
+      "company_id": "lx-company-001",
+      "created_at": "2026-03-01T11:00:00Z",
+      "updated_at": "2026-04-25T10:00:00Z"
+    },
+    {
+      "id": "lx-deal-002",
+      "name": "Sample Industries - Eng Lead",
+      "stage": "closed_won",
+      "amount": 18000,
+      "currency": "USD",
+      "company_id": "lx-company-002",
+      "created_at": "2026-02-20T14:00:00Z",
+      "updated_at": "2026-04-21T16:30:00Z"
+    }
+  ]
+}
