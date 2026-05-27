@@ -1,0 +1,23 @@
+{
+  "people": [
+    {
+      "id": "lx-person-001",
+      "name": "Alex Demo",
+      "emails": [{"value": "alex@example.com", "type": "personal"}],
+      "title": "Senior Engineer",
+      "current_company": "Example Corp",
+      "created_at": "2026-01-15T10:00:00Z",
+      "updated_at": "2026-04-20T14:30:00Z"
+    },
+    {
+      "id": "lx-person-002",
+      "name": "Brooke Demo",
+      "emails": [{"value": "brooke@example.com", "type": "work"}],
+      "title": "Engineering Manager",
+      "current_company": "Example Corp",
+      "created_at": "2026-02-01T09:00:00Z",
+      "updated_at": "2026-04-22T11:15:00Z"
+    }
+  ],
+  "scroll_id": "synthetic-scroll-token-page-1"
+}

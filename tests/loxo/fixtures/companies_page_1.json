@@ -1,0 +1,20 @@
+{
+  "companies": [
+    {
+      "id": "lx-company-001",
+      "name": "Example Corp",
+      "website": "https://example.com",
+      "industry": "Technology",
+      "created_at": "2026-01-10T08:00:00Z",
+      "updated_at": "2026-04-18T13:00:00Z"
+    },
+    {
+      "id": "lx-company-002",
+      "name": "Sample Industries",
+      "website": "https://sample.example.com",
+      "industry": "Manufacturing",
+      "created_at": "2026-02-15T10:30:00Z",
+      "updated_at": "2026-04-23T15:45:00Z"
+    }
+  ]
+}
