@@ -17,6 +17,9 @@
 | paradox\_dlt\_sources/hubspot/\_\_init\_\_.py    |       43 |        0 |    100% |           |
 | paradox\_dlt\_sources/hubspot/helpers.py         |       30 |        1 |     97% |        63 |
 | paradox\_dlt\_sources/hubspot/settings.py        |        9 |        0 |    100% |           |
+| paradox\_dlt\_sources/loxo/\_\_init\_\_.py       |       40 |        0 |    100% |           |
+| paradox\_dlt\_sources/loxo/helpers.py            |       32 |        0 |    100% |           |
+| paradox\_dlt\_sources/loxo/settings.py           |       10 |        0 |    100% |           |
 | paradox\_dlt\_sources/notion/\_\_init\_\_.py     |       77 |        2 |     97% |  367, 403 |
 | paradox\_dlt\_sources/notion/helpers.py          |       25 |        0 |    100% |           |
 | paradox\_dlt\_sources/notion/settings.py         |        9 |        0 |    100% |           |
@@ -29,7 +32,7 @@
 | paradox\_dlt\_sources/stripe/\_\_init\_\_.py     |       29 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/helpers.py          |       48 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/settings.py         |        3 |        0 |    100% |           |
-| **TOTAL**                                        |  **879** |   **12** | **99%** |           |
+| **TOTAL**                                        |  **961** |   **12** | **99%** |           |
 
 
 ## Setup coverage badge
