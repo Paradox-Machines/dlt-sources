@@ -7,6 +7,11 @@ and the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ## [Unreleased]
 
+## [0.1.0a7] — 2026-06-11
+
+### Added
+- `stripe`: `invoice_line_items` resource — a transformer over `invoices` that yields each invoice's embedded `lines.data[]` (stamped with `invoice_id`) and fetches `/v1/invoices/{id}/lines` for invoices whose lines overflow the embedded page. No own cursor; incrementality inherited from `invoices` (PAR-365).
+
 ## [0.1.0a2] — 2026-05-21
 
 ### Added
