@@ -13,6 +13,7 @@ from paradox_dlt_sources.stripe.helpers import (
     coerce_epoch_to_timestamp,
     columns,
     hoist_invoice_subscription,
+    iter_invoice_line_items,
 )
 
 
@@ -198,3 +199,74 @@ def test_hoist_tolerates_absent_intermediate_keys(missing_key: str):
         row["parent"] = {}
     out = hoist_invoice_subscription(row)
     assert out["subscription"] is None
+
+
+# ---------------------------------------------------------------------------
+# iter_invoice_line_items
+# ---------------------------------------------------------------------------
+
+
+class _FakeClient:
+    """Stand-in RESTClient: records paginate() calls and yields canned pages."""
+
+    def __init__(self, pages: list[list[dict]]) -> None:
+        self._pages = pages
+        self.calls: list[tuple[str, dict]] = []
+
+    def paginate(self, path, params=None, paginator=None, **kwargs):
+        self.calls.append((path, dict(params or {})))
+        yield from self._pages
+
+
+def test_iter_lines_yields_embedded_and_stamps_invoice_id():
+    invoice = {
+        "id": "in_001",
+        "lines": {
+            "object": "list",
+            "has_more": False,
+            "data": [{"id": "il_001a"}, {"id": "il_001b"}],
+        },
+    }
+    client = _FakeClient(pages=[])
+    out = list(iter_invoice_line_items(invoice, client))
+    assert [r["id"] for r in out] == ["il_001a", "il_001b"]
+    assert all(r["invoice_id"] == "in_001" for r in out)
+    # no overflow -> no API call
+    assert client.calls == []
+
+
+def test_iter_lines_fetches_overflow_when_has_more():
+    invoice = {
+        "id": "in_002",
+        "lines": {
+            "object": "list",
+            "has_more": True,
+            "data": [{"id": "il_002a"}],
+        },
+    }
+    client = _FakeClient(pages=[[{"id": "il_002b"}, {"id": "il_002c"}]])
+    out = list(iter_invoice_line_items(invoice, client))
+    assert [r["id"] for r in out] == ["il_002a", "il_002b", "il_002c"]
+    assert all(r["invoice_id"] == "in_002" for r in out)
+    # follow-up hit the per-invoice lines endpoint, paging after the last embedded id
+    assert client.calls == [
+        ("/invoices/in_002/lines", {"starting_after": "il_002a", "limit": 100})
+    ]
+
+
+def test_iter_lines_does_not_mutate_original_line():
+    invoice = {"id": "in_001", "lines": {"has_more": False, "data": [{"id": "il_x"}]}}
+    list(iter_invoice_line_items(invoice, _FakeClient(pages=[])))
+    assert invoice["lines"]["data"][0] == {"id": "il_x"}
+
+
+def test_iter_lines_empty_when_no_lines():
+    assert list(iter_invoice_line_items({"id": "in_003"}, _FakeClient(pages=[]))) == []
+    assert (
+        list(
+            iter_invoice_line_items(
+                {"id": "in_004", "lines": {"data": []}}, _FakeClient(pages=[])
+            )
+        )
+        == []
+    )
