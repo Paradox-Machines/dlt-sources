@@ -29,10 +29,10 @@
 | paradox\_dlt\_sources/quickbooks/\_\_init\_\_.py |       47 |        0 |    100% |           |
 | paradox\_dlt\_sources/quickbooks/helpers.py      |       85 |        1 |     99% |       263 |
 | paradox\_dlt\_sources/quickbooks/settings.py     |        8 |        0 |    100% |           |
-| paradox\_dlt\_sources/stripe/\_\_init\_\_.py     |       29 |        0 |    100% |           |
-| paradox\_dlt\_sources/stripe/helpers.py          |       48 |        0 |    100% |           |
+| paradox\_dlt\_sources/stripe/\_\_init\_\_.py     |       33 |        0 |    100% |           |
+| paradox\_dlt\_sources/stripe/helpers.py          |       62 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/settings.py         |        3 |        0 |    100% |           |
-| **TOTAL**                                        |  **961** |   **12** | **99%** |           |
+| **TOTAL**                                        |  **979** |   **12** | **99%** |           |
 
 
 ## Setup coverage badge
