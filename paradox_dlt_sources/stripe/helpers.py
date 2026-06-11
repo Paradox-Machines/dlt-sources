@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from typing import Any
 
 import pendulum
+from dlt.sources.helpers.rest_client.client import RESTClient
 from dlt.sources.helpers.rest_client.paginators import BasePaginator
 from requests import Request, Response
 
@@ -113,3 +114,36 @@ def hoist_invoice_subscription(row: Row) -> Row:
     if sub is None:
         return row
     return {**row, "subscription": sub}
+
+
+def iter_invoice_line_items(invoice: Row, client: RESTClient) -> Iterator[Row]:
+    """Yield an invoice's line items, stamping ``invoice_id``, with overflow fetch.
+
+    Stripe embeds only the first page of line items inline on the invoice
+    (``lines.data[]``).  This yields those first, then — if ``lines.has_more``
+    is set — paginates ``/invoices/{id}/lines`` starting after the last embedded
+    line id and yields the remainder.  Each yielded line gets ``invoice_id``
+    stamped on it because Stripe nulls the line's own ``invoice`` field when it
+    is embedded.
+
+    A fresh ``StripeCursorPaginator`` is passed per call so paginator state does
+    not bleed across invoices.
+    """
+    invoice_id = invoice.get("id")
+    lines = invoice.get("lines") or {}
+    data = lines.get("data") or []
+
+    last_id: str | None = None
+    for line in data:
+        last_id = line.get("id")
+        yield {**line, "invoice_id": invoice_id}
+
+    if lines.get("has_more") and last_id is not None:
+        params: dict[str, Any] = {"starting_after": last_id, "limit": 100}
+        for page in client.paginate(
+            f"/invoices/{invoice_id}/lines",
+            params=params,
+            paginator=StripeCursorPaginator(),
+        ):
+            for line in page:
+                yield {**line, "invoice_id": invoice_id}

@@ -11,6 +11,7 @@ Stripe dlt source — extracts charges, customers, invoices, and refunds from
 | `customers` | `id` | `append` | `created` (epoch int → timestamp) |
 | `invoices` | `id` | `append` | `created` (epoch int → timestamp) |
 | `refunds` | `id` | `append` | `created` (epoch int → timestamp) |
+| `invoice_line_items` | `id` | `append` | none — bounded by parent `invoices` incremental |
 
 All four resources use `created[gt]=<cursor>` for server-side incremental
 filtering.  `range_start="open"` ensures the boundary record is not
@@ -59,3 +60,9 @@ print(info)
 - **`max_table_nesting=1`**: Applied to all resources to prevent deeply nested
   arrays (e.g. `invoices.lines`) from generating table names longer than
   Postgres's 63-character identifier limit.
+- **`invoice_line_items`**: Stripe has no top-level list endpoint for line
+  items, so this resource is a transformer over `invoices`. It yields each
+  invoice's embedded `lines.data[]` (stamped with `invoice_id`), and for
+  invoices whose `lines.has_more` is set it makes a follow-up
+  `/v1/invoices/{id}/lines` call to fetch the remainder. It carries no own
+  cursor — incrementality is inherited from `invoices` (`created[gt]`).

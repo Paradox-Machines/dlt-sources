@@ -36,6 +36,11 @@ def _register_stripe_mocks(rsps: responses.RequestsMock) -> None:
     register_get(rsps, f"{_BASE}/customers", load_fixture("stripe", "customers"))
     register_get(rsps, f"{_BASE}/invoices", load_fixture("stripe", "invoices"))
     register_get(rsps, f"{_BASE}/refunds", load_fixture("stripe", "refunds"))
+    register_get(
+        rsps,
+        f"{_BASE}/invoices/in_002/lines",
+        load_fixture("stripe", "invoice_in_002_lines"),
+    )
 
 
 @responses.activate
@@ -109,3 +114,29 @@ def test_refunds_resource_loads(tmp_pipeline):
     with tmp_pipeline.sql_client() as client:
         rows = client.execute_sql("SELECT id, reason FROM refunds")
     assert rows == [("re_001", "requested_by_customer")]
+
+
+@responses.activate
+def test_invoice_line_items_table_created(tmp_pipeline):
+    _register_stripe_mocks(responses.mock)
+    tmp_pipeline.run(stripe_source(api_key="sk_test_key"))
+
+    table_names = {t["name"] for t in tmp_pipeline.default_schema.data_tables()}
+    assert "invoice_line_items" in table_names
+
+
+@responses.activate
+def test_invoice_line_items_stamped_and_overflow_fetched(tmp_pipeline):
+    """in_001 -> 2 embedded lines; in_002 -> 1 embedded + 1 fetched overflow line."""
+    _register_stripe_mocks(responses.mock)
+    tmp_pipeline.run(stripe_source(api_key="sk_test_key"))
+
+    with tmp_pipeline.sql_client() as client:
+        rows = client.execute_sql("SELECT id, invoice_id FROM invoice_line_items ORDER BY id")
+    by_id = {r[0]: r[1] for r in rows}
+    assert by_id == {
+        "il_001a": "in_001",
+        "il_001b": "in_001",
+        "il_002a": "in_002",
+        "il_002b": "in_002",
+    }
