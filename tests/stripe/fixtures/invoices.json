@@ -17,7 +17,15 @@
       "status_transitions": {
         "paid_at": 1700001000
       },
-      "metadata": {"bu": "main"}
+      "metadata": {"bu": "main"},
+      "lines": {
+        "object": "list",
+        "has_more": false,
+        "data": [
+          {"id": "il_001a", "object": "line_item", "amount": 1000, "currency": "usd", "description": "Seat", "quantity": 1, "invoice": null},
+          {"id": "il_001b", "object": "line_item", "amount": 500, "currency": "usd", "description": "Add-on", "quantity": 1, "invoice": null}
+        ]
+      }
     },
     {
       "id": "in_002",
@@ -40,6 +48,13 @@
         "subscription_details": {
           "subscription": "sub_002"
         }
+      },
+      "lines": {
+        "object": "list",
+        "has_more": true,
+        "data": [
+          {"id": "il_002a", "object": "line_item", "amount": 2000, "currency": "usd", "description": "Plan", "quantity": 1, "invoice": null}
+        ]
       }
     }
   ],

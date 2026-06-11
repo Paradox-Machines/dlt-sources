@@ -249,9 +249,7 @@ def test_iter_lines_fetches_overflow_when_has_more():
     assert [r["id"] for r in out] == ["il_002a", "il_002b", "il_002c"]
     assert all(r["invoice_id"] == "in_002" for r in out)
     # follow-up hit the per-invoice lines endpoint, paging after the last embedded id
-    assert client.calls == [
-        ("/invoices/in_002/lines", {"starting_after": "il_002a", "limit": 100})
-    ]
+    assert client.calls == [("/invoices/in_002/lines", {"starting_after": "il_002a", "limit": 100})]
 
 
 def test_iter_lines_does_not_mutate_original_line():
@@ -264,9 +262,7 @@ def test_iter_lines_empty_when_no_lines():
     assert list(iter_invoice_line_items({"id": "in_003"}, _FakeClient(pages=[]))) == []
     assert (
         list(
-            iter_invoice_line_items(
-                {"id": "in_004", "lines": {"data": []}}, _FakeClient(pages=[])
-            )
+            iter_invoice_line_items({"id": "in_004", "lines": {"data": []}}, _FakeClient(pages=[]))
         )
         == []
     )
