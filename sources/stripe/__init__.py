@@ -29,6 +29,7 @@ from .helpers import (
     coerce_epoch_to_timestamp,
     columns,
     hoist_invoice_subscription,
+    iter_invoice_line_items,
 )
 from .settings import OBJECTS, STRIPE_API_BASE_URL
 
@@ -79,6 +80,16 @@ _OBJECT_COLUMNS: dict[str, dict[str, dict[str, Any]]] = {
         bigint=("due_date", "status_transitions__paid_at"),
     ),
     "refunds": columns(text=("reason",)),
+    "invoice_line_items": columns(
+        text=(
+            "invoice_id",
+            "subscription",
+            "description",
+            "currency",
+            "price__id",
+            "proration",
+        )
+    ),
 }
 
 
@@ -131,7 +142,26 @@ def stripe_source(
             mapped = mapped.add_map(hoist_invoice_subscription)
         return mapped
 
-    return [_resource(obj) for obj in OBJECTS]
+    resources = {obj: _resource(obj) for obj in OBJECTS}
+
+    @dlt.transformer(
+        data_from=resources["invoices"],
+        name="invoice_line_items",
+        primary_key="id",
+        write_disposition="append",
+        columns=_OBJECT_COLUMNS["invoice_line_items"],
+        # Line items carry nested ``price``/``period`` objects and a
+        # ``discount_amounts`` array; cap nesting like the other resources to
+        # keep generated table names under Postgres's 63-char limit.
+        max_table_nesting=1,
+    )
+    def invoice_line_items(invoice: Row) -> Iterator[Row]:
+        # No own incremental cursor: only invoices newer than the prior run's
+        # ``created[gt]`` reach this transformer, so line items are naturally
+        # bounded to newly-loaded invoices.
+        yield from iter_invoice_line_items(invoice, client)
+
+    return [*resources.values(), invoice_line_items]
 
 
 __all__ = ["stripe_source"]
