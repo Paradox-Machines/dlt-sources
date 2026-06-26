@@ -1,0 +1,1 @@
+{"data": {"boards": [{"items_page": {"cursor": "next_cursor_abc", "items": [{"id": "101", "name": "Item One", "state": "active", "board_id": "1", "group": {"id": "g1", "title": "Group 1"}, "column_values": [], "created_at": "2024-01-01T00:00:00Z", "updated_at": "2024-01-02T00:00:00Z"}]}}]}}

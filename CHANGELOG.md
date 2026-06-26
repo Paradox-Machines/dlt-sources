@@ -7,6 +7,11 @@ and the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ## [Unreleased]
 
+### Added
+- `monday_crm` — boards, items (incremental on updated_at), users, teams, tags, updates, workspaces, columns, groups. Bearer-token auth. GraphQL POST endpoint with page-number and cursor-based pagination.
+- `monday_crm` — boards, items (incremental on updated_at), users, teams, tags, updates, workspaces. Bearer-token auth. GraphQL POST endpoint with page-number and cursor-based pagination.
+- `monday_crm` — boards, items (incremental on updated_at), users, teams, tags, updates, workspaces. Bearer-token auth. GraphQL POST endpoint with page-number and cursor-based pagination.
+
 ## [0.1.0a7] — 2026-06-11
 
 ### Added

@@ -1,0 +1,1 @@
+{"data": {"users": [{"id": "201", "name": "Alice", "email": "alice@example.com", "enabled": true, "created_at": "2024-01-01T00:00:00Z", "teams": [{"id": "301", "name": "Team A"}]}]}}
