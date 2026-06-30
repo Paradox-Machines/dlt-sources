@@ -1,0 +1,1 @@
+{"email_accounts": [{"id": "ea1", "email": "alice@example.com", "created_at": "2024-01-01T00:00:00Z"}, {"id": "ea2", "email": "bob@example.com", "created_at": "2024-01-02T00:00:00Z"}]}
