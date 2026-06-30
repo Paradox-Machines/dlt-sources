@@ -57,6 +57,7 @@ for `duckdb`. Run `dlt init --list-sources --location <url>` to enumerate.
 | [attio](paradox_dlt_sources/attio/README.md) | beta | companies, people, deals, lists, notes |
 | [github](paradox_dlt_sources/github/README.md) | beta | organizations, users, repositories, pull_requests, commits, pull_request_commits, pull_request_stats |
 | [hubspot](paradox_dlt_sources/hubspot/README.md) | beta | companies, contacts, deals, engagements, deal_pipelines |
+| [monday_crm](paradox_dlt_sources/monday_crm/README.md) | beta | boards, items (incremental), users, teams, tags, updates, workspaces, columns, groups |
 | [notion](paradox_dlt_sources/notion/README.md) | beta | users, databases, pages, blocks, comments |
 | [pipedrive](paradox_dlt_sources/pipedrive/README.md) | beta | persons, deals, leads, activities, organizations, stages, users_recents |
 | [quickbooks](paradox_dlt_sources/quickbooks/README.md) | beta | 24 entities (invoices, customers, accounts, transactions, …) |

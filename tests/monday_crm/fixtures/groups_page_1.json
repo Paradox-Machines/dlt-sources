@@ -1,0 +1,1 @@
+{"data": {"boards": [{"id": "1", "name": "Board One", "description": "desc", "state": "active", "board_kind": "public", "workspace_id": "10", "columns": [{"id": "c1", "title": "Name", "type": "name"}], "groups": [{"id": "g1", "title": "Group 1"}]}]}}
