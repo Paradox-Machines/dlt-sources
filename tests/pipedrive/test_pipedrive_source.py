@@ -105,6 +105,29 @@ def test_users_resource_unwraps_recents_envelope(tmp_pipeline: object) -> None:
 
 
 @responses.activate
+def test_api_token_never_appears_in_request_url(tmp_pipeline: object) -> None:
+    """The personal API token must ride in the `x-api-token` header, never the
+    query string.
+
+    Pipedrive v1 historically accepted `?api_token=<value>`, but requests bakes
+    the full `response.url` (query string included) into every `HTTPError`
+    message. dlt wraps that in `ResourceExtractionError`, so a query-string
+    token leaks into Dagster/stdout logs on any 4xx/5xx. Header auth keeps the
+    secret out of the URL entirely — the only reliable fix for that leak.
+    """
+    _register_all_mocks(responses.mock)
+    tmp_pipeline.run(pipedrive_source(api_key="test-key", base_url=BASE))  # type: ignore[attr-defined]
+
+    pipedrive_calls = [c for c in responses.calls if c.request.url.startswith(BASE)]
+    assert pipedrive_calls, "expected at least one request to Pipedrive"
+    for call in pipedrive_calls:
+        assert "api_token" not in call.request.url, f"token leaked into URL: {call.request.url}"
+        assert call.request.headers.get("x-api-token") == "test-key", (
+            f"expected x-api-token header on {call.request.url}"
+        )
+
+
+@responses.activate
 def test_stages_resource_uses_replace_disposition(tmp_pipeline: object) -> None:
     """Stages uses replace write disposition — full snapshot every run."""
     _register_all_mocks(responses.mock)

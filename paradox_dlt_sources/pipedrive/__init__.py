@@ -3,10 +3,12 @@
 Public surface mirrors the Airbyte connector: same resource names, same
 field shapes after parquet schema inference.
 
-Authentication is Pipedrive **Personal API token** passed as a query
-parameter (`?api_token=<value>`). The v1 API accepts personal tokens this
-way; Bearer auth only works on Pipedrive's v2 API with OAuth access tokens.
-Each workspace mints one long-lived token from
+Authentication is Pipedrive **Personal API token** passed in the
+``x-api-token`` request header. Pipedrive also accepts the token as a
+``?api_token=<value>`` query parameter, but that form leaks the secret into
+error logs (``requests`` embeds the full URL in every ``HTTPError``), so we
+use the header exclusively. Bearer auth only works on Pipedrive's v2 API with
+OAuth access tokens. Each workspace mints one long-lived token from
 Settings → Personal preferences → API.
 
 Resources:
@@ -109,8 +111,15 @@ def pipedrive_source(
             Mint at Pipedrive → Settings → Personal preferences → API.
         base_url: API base URL — override for testing or sandbox.
     """
-    # Pipedrive v1 wants `?api_token=<value>` not `Authorization: Bearer …`.
-    auth = APIKeyAuth(name="api_token", api_key=api_key, location="query")
+    # Pipedrive personal tokens go in the `x-api-token` header, NOT the
+    # `?api_token=<value>` query param and NOT `Authorization: Bearer …`
+    # (Bearer is v2-OAuth only). The header form is mandatory here for
+    # security: requests bakes the full `response.url` (query string included)
+    # into every `HTTPError` message, dlt re-wraps that in
+    # `ResourceExtractionError`, and Dagster logs/stores it — so a query-string
+    # token leaks the secret into logs on any 4xx/5xx. A header keeps the token
+    # out of the URL entirely.
+    auth = APIKeyAuth(name="x-api-token", api_key=api_key, location="header")
 
     client = RESTClient(
         base_url=base_url,
