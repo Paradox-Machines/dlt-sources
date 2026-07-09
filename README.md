@@ -29,7 +29,7 @@
 | paradox\_dlt\_sources/notion/\_\_init\_\_.py      |       77 |        2 |     97% |  367, 403 |
 | paradox\_dlt\_sources/notion/helpers.py           |       25 |        0 |    100% |           |
 | paradox\_dlt\_sources/notion/settings.py          |        9 |        0 |    100% |           |
-| paradox\_dlt\_sources/pipedrive/\_\_init\_\_.py   |       43 |        1 |     98% |       196 |
+| paradox\_dlt\_sources/pipedrive/\_\_init\_\_.py   |       43 |        1 |     98% |       205 |
 | paradox\_dlt\_sources/pipedrive/helpers.py        |       46 |        0 |    100% |           |
 | paradox\_dlt\_sources/pipedrive/settings.py       |        7 |        0 |    100% |           |
 | paradox\_dlt\_sources/quickbooks/\_\_init\_\_.py  |       47 |        0 |    100% |           |
