@@ -1,0 +1,54 @@
+{
+  "value": [
+    {
+      "id": "item-1",
+      "name": "MutualNDA_v1.docx",
+      "size": 5,
+      "lastModifiedDateTime": "2026-05-03T12:00:00Z",
+      "webUrl": "https://point41.sharepoint.com/ndas/MutualNDA_v1.docx",
+      "file": {
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      },
+      "createdBy": {
+        "user": {
+          "displayName": "Deal Agent",
+          "email": "agent@point41.com"
+        }
+      }
+    },
+    {
+      "id": "item-2",
+      "name": "MutualNDA_v2_return.docx",
+      "size": 6,
+      "lastModifiedDateTime": "2026-05-04T12:00:00Z",
+      "webUrl": "https://point41.sharepoint.com/ndas/MutualNDA_v2_return.docx",
+      "file": {
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      },
+      "createdBy": {
+        "user": {
+          "displayName": "Acme Legal",
+          "email": "legal@acme.com"
+        }
+      }
+    },
+    {
+      "id": "item-3",
+      "name": "Project Falcon Teaser.pdf",
+      "size": 4,
+      "lastModifiedDateTime": "2026-05-02T12:00:00Z",
+      "webUrl": "https://point41.sharepoint.com/ndas/Teaser.pdf",
+      "file": {
+        "mimeType": "application/pdf"
+      }
+    },
+    {
+      "id": "folder-1",
+      "name": "Archive",
+      "lastModifiedDateTime": "2026-05-06T12:00:00Z",
+      "folder": {
+        "childCount": 3
+      }
+    }
+  ]
+}
