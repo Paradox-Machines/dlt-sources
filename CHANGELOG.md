@@ -8,6 +8,7 @@ and the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 ## [Unreleased]
 
 ### Added
+- `m365_graph` — Microsoft 365 / Graph NDA intake (app-only OAuth2 client-credentials, no IMAP). `mail_documents` (shared-mailbox attachments) + `sharepoint_documents` (library files) land into one `documents` dropzone table. Classifies each inbound as `fresh_nda` / `counterparty_return` / `teaser` with a `round_no`: mail by thread position (conversationIndex depth + RE/FW subject prefix), SharePoint by filename convention. Incremental on `cursor.start_value` (mail early-terminates on `receivedDateTime desc`; SharePoint skips stale items).
 - `apollo_io` — contacts (incremental), accounts, people, opportunities, sequences, users, email_accounts, labels. X-Api-Key header auth. Page-number pagination.
 - `apollo_io` — contacts (incremental), accounts, people, opportunities, sequences, users, email_accounts, labels. X-Api-Key header auth. Page-number pagination.
 - `monday_crm` — boards, items (incremental on updated_at), users, teams, tags, updates, workspaces, columns, groups. Bearer-token auth. GraphQL POST endpoint with page-number and cursor-based pagination.
