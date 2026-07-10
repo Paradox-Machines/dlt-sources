@@ -23,6 +23,9 @@
 | paradox\_dlt\_sources/loxo/\_\_init\_\_.py        |       40 |        0 |    100% |           |
 | paradox\_dlt\_sources/loxo/helpers.py             |       32 |        0 |    100% |           |
 | paradox\_dlt\_sources/loxo/settings.py            |       10 |        0 |    100% |           |
+| paradox\_dlt\_sources/m365\_graph/\_\_init\_\_.py |       72 |        0 |    100% |           |
+| paradox\_dlt\_sources/m365\_graph/helpers.py      |      111 |        0 |    100% |           |
+| paradox\_dlt\_sources/m365\_graph/settings.py     |       23 |        0 |    100% |           |
 | paradox\_dlt\_sources/monday\_crm/\_\_init\_\_.py |      144 |        8 |     94% |104-114, 155-161, 202 |
 | paradox\_dlt\_sources/monday\_crm/helpers.py      |       50 |        2 |     96% |     71-72 |
 | paradox\_dlt\_sources/monday\_crm/settings.py     |       10 |        0 |    100% |           |
@@ -38,7 +41,7 @@
 | paradox\_dlt\_sources/stripe/\_\_init\_\_.py      |       33 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/helpers.py           |       62 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/settings.py          |        3 |        0 |    100% |           |
-| **TOTAL**                                         | **1402** |   **58** | **96%** |           |
+| **TOTAL**                                         | **1608** |   **58** | **96%** |           |
 
 
 ## Setup coverage badge
