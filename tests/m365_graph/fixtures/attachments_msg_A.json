@@ -1,0 +1,36 @@
+{
+  "value": [
+    {
+      "@odata.type": "#microsoft.graph.fileAttachment",
+      "id": "att-a1",
+      "name": "Project Falcon - Mutual NDA.docx",
+      "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "size": 15,
+      "isInline": false,
+      "contentBytes": "RlJFU0gtTkRBLUJZVEVT"
+    },
+    {
+      "@odata.type": "#microsoft.graph.fileAttachment",
+      "id": "att-a2",
+      "name": "Project Falcon Teaser.pdf",
+      "contentType": "application/pdf",
+      "size": 12,
+      "isInline": false,
+      "contentBytes": "VEVBU0VSLUJZVEVT"
+    },
+    {
+      "@odata.type": "#microsoft.graph.fileAttachment",
+      "id": "att-a3",
+      "name": "point41-logo.png",
+      "contentType": "image/png",
+      "size": 8,
+      "isInline": true,
+      "contentBytes": "aW5saW5lLXNpZw=="
+    },
+    {
+      "@odata.type": "#microsoft.graph.itemAttachment",
+      "id": "att-a4",
+      "name": "Forwarded message"
+    }
+  ]
+}

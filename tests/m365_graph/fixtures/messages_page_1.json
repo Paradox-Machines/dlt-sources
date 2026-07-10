@@ -1,0 +1,49 @@
+{
+  "value": [
+    {
+      "id": "msg-B",
+      "subject": "RE: Project Falcon \u2014 Mutual NDA",
+      "receivedDateTime": "2026-05-02T10:00:00Z",
+      "conversationId": "conv-1",
+      "conversationIndex": "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB",
+      "hasAttachments": true,
+      "webLink": "https://outlook.office365.com/msg-B",
+      "from": {
+        "emailAddress": {
+          "name": "Acme Legal",
+          "address": "legal@acme.com"
+        }
+      }
+    },
+    {
+      "id": "msg-A",
+      "subject": "Project Falcon \u2014 Mutual NDA",
+      "receivedDateTime": "2026-05-01T09:00:00Z",
+      "conversationId": "conv-1",
+      "conversationIndex": "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQ==",
+      "hasAttachments": true,
+      "webLink": "https://outlook.office365.com/msg-A",
+      "from": {
+        "emailAddress": {
+          "name": "Point41 Deals",
+          "address": "deals@point41.com"
+        }
+      }
+    },
+    {
+      "id": "msg-C",
+      "subject": "RE: Project Falcon \u2014 Mutual NDA (no docs)",
+      "receivedDateTime": "2026-04-30T08:00:00Z",
+      "conversationId": "conv-1",
+      "conversationIndex": "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB",
+      "hasAttachments": false,
+      "webLink": "https://outlook.office365.com/msg-C",
+      "from": {
+        "emailAddress": {
+          "name": "Acme Legal",
+          "address": "legal@acme.com"
+        }
+      }
+    }
+  ]
+}

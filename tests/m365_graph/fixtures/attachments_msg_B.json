@@ -1,0 +1,13 @@
+{
+  "value": [
+    {
+      "@odata.type": "#microsoft.graph.fileAttachment",
+      "id": "att-b1",
+      "name": "Mutual NDA - redline.docx",
+      "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "size": 13,
+      "isInline": false,
+      "contentBytes": "UkVETElORS1CWVRFUw=="
+    }
+  ]
+}
