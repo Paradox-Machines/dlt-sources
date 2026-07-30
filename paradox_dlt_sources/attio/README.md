@@ -7,11 +7,11 @@ Attio dlt source — extracts CRM records, lists, and notes from
 
 | Resource | Primary key | Write disposition | Notes |
 |---|---|---|---|
-| `companies` | `record_id` | `replace` | POST `/v2/objects/companies/records/query` |
-| `people` | `record_id` | `replace` | POST `/v2/objects/people/records/query` |
-| `deals` | `record_id` | `replace` | POST `/v2/objects/deals/records/query` |
+| `companies` | `record_id` | `replace` | POST `/v2/objects/companies/records/query` (limit/offset, 1000/page) |
+| `people` | `record_id` | `replace` | POST `/v2/objects/people/records/query` (limit/offset, 1000/page) |
+| `deals` | `record_id` | `replace` | POST `/v2/objects/deals/records/query` (limit/offset, 1000/page) |
 | `lists` | `list_id` | `replace` | GET `/v2/lists` (returns all in single response) |
-| `notes` | `note_id` | `replace` | GET `/v2/notes` (single-page until cursor confirmed) |
+| `notes` | `note_id` | `replace` | GET `/v2/notes` (single-page until pagination confirmed) |
 
 ## Auth
 
@@ -60,9 +60,16 @@ attio_source(objects=("companies", "people", "deals", "my_custom_object"))
 - Records: `replace` mode (full re-snapshot per run). Attio records expose
   `created_at` but no record-level `updated_at`, so no incremental cursor
   is possible until Attio adds one.
-- Notes pagination: `/v2/notes` cursor shape is undocumented. Currently
-  uses `SinglePagePaginator` (returns the first page only). Confirm shape
-  before enabling multi-page extraction.
+- Records pagination: `POST /v2/objects/{slug}/records/query` is
+  limit/offset paginated in the request body and returns no cursor.
+  `AttioRecordOffsetPaginator` walks it at 1000 rows/page (Attio's max),
+  stopping on the first short page. Override with `page_size=`. The
+  opening request seeds `limit`/`offset` via `paginator.initial_body()`
+  because dlt only calls `update_request` from the second page onward —
+  omit it and page 1 silently takes Attio's 500-row default (PAR-1014).
+- Notes pagination: `/v2/notes` is limit/offset per Attio's docs but is
+  still on `SinglePagePaginator` (first page only). Unverified against
+  real data — no tenant has had a non-empty `notes` table yet.
 - Lists pagination: `/v2/lists` returns ALL lists in one response and
   ignores offset/limit — `SinglePagePaginator` is the correct choice
   (OffsetPaginator would loop forever).

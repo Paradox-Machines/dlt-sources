@@ -9,9 +9,14 @@
       "created_at": "2026-03-05T09:15:00Z",
       "web_url": "https://app.attio.com/companies/rec-c3",
       "values": {
-        "name": [{"active_from": "2026-03-05T09:15:00Z", "active_until": null, "value": "Gamma LLC"}]
+        "name": [
+          {
+            "active_from": "2026-03-05T09:15:00Z",
+            "active_until": null,
+            "value": "Gamma LLC"
+          }
+        ]
       }
     }
-  ],
-  "pagination": {}
+  ]
 }

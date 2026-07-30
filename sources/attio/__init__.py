@@ -11,13 +11,14 @@ from dlt.sources.helpers.rest_client.client import RESTClient
 from dlt.sources.helpers.rest_client.paginators import SinglePagePaginator
 
 from .helpers import (
-    AttioRecordCursorPaginator,
+    AttioRecordOffsetPaginator,
     columns,
     promote_active_values,
     skip_on_forbidden,
 )
 from .settings import (
     ATTIO_API_BASE_URL,
+    ATTIO_MAX_PAGE_SIZE,
     SCOPES_LISTS,
     SCOPES_NOTES,
     SCOPES_RECORDS,
@@ -111,6 +112,7 @@ def attio_source(
     api_key: str = dlt.secrets.value,
     objects: tuple[str, ...] = STANDARD_OBJECTS,
     base_url: str = ATTIO_API_BASE_URL,
+    page_size: int = ATTIO_MAX_PAGE_SIZE,
 ) -> list[Any]:
     """Attio source factory — yields one resource per object slug plus lists+notes.
 
@@ -118,6 +120,7 @@ def attio_source(
         api_key: Attio API key (Bearer auth). Resolved from secrets by default.
         objects: standard or custom object slugs to extract records for.
         base_url: API base URL — override for testing.
+        page_size: rows per `records/query` request, 1..1000.
     """
     client = RESTClient(base_url=base_url, auth=BearerTokenAuth(api_key))
 
@@ -129,11 +132,15 @@ def attio_source(
             columns=_RECORD_COLUMNS.get(object_slug, columns(text=("record_id",))),
         )
         def _r() -> Iterator[Row]:
-            paginator = AttioRecordCursorPaginator()
+            paginator = AttioRecordOffsetPaginator(page_size=page_size)
             pages = client.paginate(
                 f"/v2/objects/{object_slug}/records/query",
                 method="POST",
-                json={},
+                # dlt only calls `paginator.update_request` from the SECOND
+                # request onward, so the first page's limit/offset has to be
+                # seeded here. Left off, page 1 silently takes Attio's
+                # server-side default of 500 (PAR-1014).
+                json=paginator.initial_body(),
                 paginator=paginator,
                 data_selector="data",
             )
