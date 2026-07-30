@@ -7,6 +7,9 @@ and the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ## [Unreleased]
 
+### Fixed
+- `attio` — records extraction was truncated at 500 rows per object (PAR-1014). `POST /v2/objects/{slug}/records/query` is limit/offset paginated and returns no cursor, but the source paginated on `pagination.next_cursor` — a field the endpoint never sends — so it stopped after page one at Attio's 500-row default. Observed in Infinity prod as `companies` and `people` pinned at exactly 500 rows while `deals` (127) looked fine. Replaced `AttioRecordCursorPaginator` with `AttioRecordOffsetPaginator`, which walks `limit`/`offset` at 1000 rows per page and stops on the first short page. The opening request now seeds `limit`/`offset` explicitly, since dlt calls `update_request` only from the second page onward — without that, page one still took the server default and the walk terminated immediately at 500. **Breaking for direct importers:** `AttioRecordCursorPaginator` is removed; `attio_source` gains a `page_size` kwarg (default 1000).
+
 ### Added
 - `m365_graph` — Microsoft 365 / Graph NDA intake (app-only OAuth2 client-credentials, no IMAP). `mail_documents` (shared-mailbox attachments) + `sharepoint_documents` (library files) land into one `documents` dropzone table. Classifies each inbound as `fresh_nda` / `counterparty_return` / `teaser` with a `round_no`: mail by thread position (conversationIndex depth + RE/FW subject prefix), SharePoint by filename convention. Incremental on `cursor.start_value` (mail early-terminates on `receivedDateTime desc`; SharePoint skips stale items).
 - `apollo_io` — contacts (incremental), accounts, people, opportunities, sequences, users, email_accounts, labels. X-Api-Key header auth. Page-number pagination.

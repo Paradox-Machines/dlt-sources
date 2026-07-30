@@ -9,7 +9,7 @@ import pytest
 from requests import HTTPError, Response
 
 from paradox_dlt_sources.attio.helpers import (
-    AttioRecordCursorPaginator,
+    AttioRecordOffsetPaginator,
     active_scalar,
     columns,
     promote_active_values,
@@ -41,43 +41,102 @@ def test_columns_empty():
     assert columns() == {}
 
 
-# --- AttioRecordCursorPaginator ---
+# --- AttioRecordOffsetPaginator ---
+#
+# `POST /v2/objects/{slug}/records/query` is limit/offset paginated and does
+# NOT return `pagination.next_cursor`. PAR-1014: a cursor paginator reading a
+# field the endpoint never sends stops after page 1, silently truncating
+# companies + people to Attio's default page size of 500.
 
 
-def test_paginator_advances_when_next_cursor_present():
-    p = AttioRecordCursorPaginator()
-    p.update_state(_response_with_body({"pagination": {"next_cursor": "abc"}}))
-    assert p._has_next_page is True
-    assert p._cursor == "abc"
+class _Req:
+    """Minimal stand-in for `requests.Request` — only `.json` is touched."""
+
+    def __init__(self, body: dict | None = None) -> None:
+        self.json = {} if body is None else body
 
 
-def test_paginator_stops_when_next_cursor_absent():
-    p = AttioRecordCursorPaginator()
-    p.update_state(_response_with_body({"pagination": {}}))
-    assert p._has_next_page is False
+def _full_page(limit: int) -> Response:
+    return _response_with_body({"data": [{"id": i} for i in range(limit)]})
 
 
-def test_paginator_writes_cursor_into_next_request_body():
-    p = AttioRecordCursorPaginator()
-    p.update_state(_response_with_body({"pagination": {"next_cursor": "xyz"}}))
+def _short_page(n: int) -> Response:
+    return _response_with_body({"data": [{"id": i} for i in range(n)]})
 
-    class _Req:
-        json = {"existing": 1}
+
+def test_paginator_seeds_limit_and_zero_offset_on_first_request():
+    p = AttioRecordOffsetPaginator(page_size=1000)
+    req = _Req()
+    p.update_request(req)
+    assert req.json == {"limit": 1000, "offset": 0}
+
+
+def test_initial_body_carries_limit_and_zero_offset():
+    """dlt skips `update_request` on the first call, so page 1 needs seeding."""
+    assert AttioRecordOffsetPaginator(page_size=1000).initial_body() == {
+        "limit": 1000,
+        "offset": 0,
+    }
+
+
+def test_paginator_advances_on_full_page():
+    p = AttioRecordOffsetPaginator(page_size=500)
+    p.update_state(_full_page(500), data=[{"id": i} for i in range(500)])
+    assert p.has_next_page is True
 
     req = _Req()
     p.update_request(req)
-    assert req.json == {"existing": 1, "cursor": "xyz"}
+    assert req.json == {"limit": 500, "offset": 500}
 
 
-def test_paginator_no_op_when_cursor_unset():
-    p = AttioRecordCursorPaginator()
+def test_paginator_stops_on_short_page():
+    p = AttioRecordOffsetPaginator(page_size=500)
+    p.update_state(_short_page(499), data=[{"id": i} for i in range(499)])
+    assert p.has_next_page is False
 
-    class _Req:
-        json = {"existing": 1}
 
-    req = _Req()
+def test_paginator_stops_on_empty_page():
+    p = AttioRecordOffsetPaginator(page_size=500)
+    p.update_state(_short_page(0), data=[])
+    assert p.has_next_page is False
+
+
+def test_paginator_walks_multiple_pages_then_terminates():
+    """The regression guard: offset must keep climbing past page 1."""
+    p = AttioRecordOffsetPaginator(page_size=100)
+    offsets = []
+
+    for page_len in (100, 100, 37):
+        req = _Req()
+        p.update_request(req)
+        offsets.append(req.json["offset"])
+        p.update_state(_short_page(page_len), data=[{"id": i} for i in range(page_len)])
+
+    assert offsets == [0, 100, 200]
+    assert p.has_next_page is False
+
+
+def test_paginator_preserves_existing_body_keys():
+    p = AttioRecordOffsetPaginator(page_size=500)
+    req = _Req({"sorts": [{"direction": "asc"}]})
     p.update_request(req)
-    assert req.json == {"existing": 1}
+    assert req.json == {"sorts": [{"direction": "asc"}], "limit": 500, "offset": 0}
+
+
+def test_paginator_falls_back_to_response_body_when_data_arg_absent():
+    """dlt passes the selected rows, but don't depend on it being supplied."""
+    p = AttioRecordOffsetPaginator(page_size=500)
+    p.update_state(_full_page(500))
+    assert p.has_next_page is True
+
+    p2 = AttioRecordOffsetPaginator(page_size=500)
+    p2.update_state(_short_page(3))
+    assert p2.has_next_page is False
+
+
+def test_paginator_rejects_page_size_above_attio_maximum():
+    with pytest.raises(ValueError, match="1000"):
+        AttioRecordOffsetPaginator(page_size=1001)
 
 
 # --- active_scalar ---

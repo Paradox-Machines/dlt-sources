@@ -9,6 +9,8 @@ from typing import Any
 from dlt.sources.helpers.rest_client.paginators import BasePaginator
 from requests import HTTPError, Request, Response
 
+from paradox_dlt_sources.attio.settings import ATTIO_MAX_PAGE_SIZE
+
 LOGGER = logging.getLogger(__name__)
 
 Row = dict[str, Any]
@@ -38,32 +40,54 @@ def columns(
     return out
 
 
-class AttioRecordCursorPaginator(BasePaginator):
-    """POST `/v2/objects/{slug}/records/query` body-cursor pagination.
+class AttioRecordOffsetPaginator(BasePaginator):
+    """POST `/v2/objects/{slug}/records/query` limit/offset body pagination.
 
-    Attio returns `pagination.next_cursor` (string) when there are more
-    records; pass it back as `cursor` in the next POST body. Loop ends
-    when the field is absent.
+    Attio's records-query endpoint takes `limit` and `offset` in the POST
+    body and returns no pagination cursor. Walk it by seeding `offset: 0`
+    and incrementing by `limit` per page; a page shorter than `limit` is
+    the last one.
+
+    PAR-1014: an earlier cursor-based paginator watched for
+    `pagination.next_cursor`, which this endpoint never sends — so it
+    stopped after page one and silently truncated `companies` and
+    `people` to Attio's default page size of 500.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, page_size: int = ATTIO_MAX_PAGE_SIZE) -> None:
         super().__init__()
-        self._cursor: str | None = None
+        if not 0 < page_size <= ATTIO_MAX_PAGE_SIZE:
+            raise ValueError(
+                f"page_size must be in 1..{ATTIO_MAX_PAGE_SIZE} "
+                f"(Attio's per-request maximum), got {page_size}"
+            )
+        self._page_size = page_size
+        self._offset = 0
+
+    def initial_body(self) -> dict[str, int]:
+        """Body for the FIRST request — dlt never calls `update_request` for it.
+
+        Without this the opening page falls back to Attio's server-side
+        default limit, which both truncates and desyncs the offset walk.
+        """
+        return {"limit": self._page_size, "offset": self._offset}
 
     def update_state(self, response: Response, data: list[Any] | None = None) -> None:
-        body = response.json() if response.content else {}
-        next_cursor = (body.get("pagination") or {}).get("next_cursor")
-        if next_cursor:
-            self._cursor = next_cursor
-            self._has_next_page = True
-        else:
-            self._has_next_page = False
+        if data is None:
+            body = response.json() if response.content else {}
+            data = body.get("data") or []
+        received = len(data)
+        # A short page means we've reached the end. A full page might be the
+        # exact final page — one extra empty request is the cost of not
+        # trusting a total the endpoint doesn't return.
+        self._has_next_page = received >= self._page_size
+        if self._has_next_page:
+            self._offset += received
 
     def update_request(self, request: Request) -> None:
-        if self._cursor is None:
-            return
         body = request.json or {}
-        body["cursor"] = self._cursor
+        body["limit"] = self._page_size
+        body["offset"] = self._offset
         request.json = body
 
 
