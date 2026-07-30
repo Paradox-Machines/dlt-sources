@@ -7,6 +7,8 @@ and the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ## [Unreleased]
 
+## [0.1.0a9] — 2026-07-30
+
 ### Fixed
 - `attio` — records extraction was truncated at 500 rows per object (PAR-1014). `POST /v2/objects/{slug}/records/query` is limit/offset paginated and returns no cursor, but the source paginated on `pagination.next_cursor` — a field the endpoint never sends — so it stopped after page one at Attio's 500-row default. Observed in Infinity prod as `companies` and `people` pinned at exactly 500 rows while `deals` (127) looked fine. Replaced `AttioRecordCursorPaginator` with `AttioRecordOffsetPaginator`, which walks `limit`/`offset` at 1000 rows per page and stops on the first short page. The opening request now seeds `limit`/`offset` explicitly, since dlt calls `update_request` only from the second page onward — without that, page one still took the server default and the walk terminated immediately at 500. **Breaking for direct importers:** `AttioRecordCursorPaginator` is removed; `attio_source` gains a `page_size` kwarg (default 1000).
 
