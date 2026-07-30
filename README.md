@@ -12,8 +12,8 @@
 | paradox\_dlt\_sources/apollo\_io/helpers.py       |       19 |        1 |     95% |        44 |
 | paradox\_dlt\_sources/apollo\_io/settings.py      |       12 |        0 |    100% |           |
 | paradox\_dlt\_sources/attio/\_\_init\_\_.py       |       56 |        0 |    100% |           |
-| paradox\_dlt\_sources/attio/helpers.py            |       66 |        2 |     97% |  109, 145 |
-| paradox\_dlt\_sources/attio/settings.py           |        6 |        0 |    100% |           |
+| paradox\_dlt\_sources/attio/helpers.py            |       72 |        2 |     97% |  133, 169 |
+| paradox\_dlt\_sources/attio/settings.py           |        7 |        0 |    100% |           |
 | paradox\_dlt\_sources/github/\_\_init\_\_.py      |      130 |        5 |     96% |170, 338-341 |
 | paradox\_dlt\_sources/github/helpers.py           |       44 |        0 |    100% |           |
 | paradox\_dlt\_sources/github/settings.py          |        7 |        0 |    100% |           |
@@ -41,7 +41,7 @@
 | paradox\_dlt\_sources/stripe/\_\_init\_\_.py      |       33 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/helpers.py           |       62 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/settings.py          |        3 |        0 |    100% |           |
-| **TOTAL**                                         | **1608** |   **58** | **96%** |           |
+| **TOTAL**                                         | **1615** |   **58** | **96%** |           |
 
 
 ## Setup coverage badge
