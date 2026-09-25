@@ -111,6 +111,22 @@ def flatten_deal_user_refs(row: Row) -> Row:
     }
 
 
+def stringify_field_option_ids(row: Row) -> Row:
+    """Field `options[].id` is an int for custom options but a string for
+    built-in ones (`won`, `ManuallyCreated`, `True`). Cast every id to str so
+    the child table's type doesn't depend on which option dlt sees first."""
+    options = row.get("options")
+    if not isinstance(options, list):
+        return row
+    return {
+        **row,
+        "options": [
+            {**o, "id": str(o["id"])} if isinstance(o, dict) and o.get("id") is not None else o
+            for o in options
+        ],
+    }
+
+
 def flatten_person_owner_ref(row: Row) -> Row:
     """`/v1/persons` returns `owner_id` as a nested user object (unlike
     `org_id` on the same endpoint which is a scalar). Flatten to id."""

@@ -43,6 +43,7 @@ from .helpers import (
     flatten_deal_user_refs,
     flatten_person_contact_arrays,
     flatten_person_owner_ref,
+    stringify_field_option_ids,
 )
 from .settings import (
     ACTIVITIES_ALL_USERS_PARAM,
@@ -261,7 +262,7 @@ def pipedrive_source(
             ):
                 yield from page
 
-        return _r
+        return _r().add_map(stringify_field_option_ids)
 
     # Pipedrive's `deals` endpoint returns `user_id` and `creator_user_id`
     # as nested `{id, name, email, ...}` objects rather than scalar ids.

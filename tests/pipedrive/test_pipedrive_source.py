@@ -162,6 +162,11 @@ def test_deal_fields_land_option_labels(tmp_pipeline: object) -> None:
         rows = client.execute_sql(
             "SELECT f.key, o.id, o.label FROM deal_fields f "
             "JOIN deal_fields__options o ON o._dlt_parent_id = f._dlt_id "
-            "ORDER BY o.id"
+            "ORDER BY f.key, o.label"
         )
-    assert rows == [("channel", 3, "Website"), ("channel", 198, "Event")]
+    assert rows == [
+        ("channel", "198", "Event"),
+        ("channel", "3", "Website"),
+        ("status", "lost", "Lost"),
+        ("status", "won", "Won"),
+    ]

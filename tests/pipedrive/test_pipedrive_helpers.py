@@ -13,6 +13,7 @@ from paradox_dlt_sources.pipedrive.helpers import (
     flatten_deal_user_refs,
     flatten_person_contact_arrays,
     flatten_person_owner_ref,
+    stringify_field_option_ids,
 )
 
 # ---------------------------------------------------------------------------
@@ -231,3 +232,17 @@ def test_flatten_person_owner_ref_passes_through_scalar() -> None:
     row: dict[str, Any] = {"id": 2, "owner_id": 10}
     out = flatten_person_owner_ref(row)
     assert out["owner_id"] == 10
+
+
+# stringify_field_option_ids
+
+
+def test_stringify_field_option_ids_casts_mixed_ids_to_str() -> None:
+    row = {"key": "channel", "options": [{"id": 3, "label": "Web"}, {"id": "won", "label": "Won"}]}
+    out = stringify_field_option_ids(row)
+    assert [o["id"] for o in out["options"]] == ["3", "won"]
+
+
+def test_stringify_field_option_ids_leaves_fields_without_options() -> None:
+    row = {"key": "channel_id", "options": None}
+    assert stringify_field_option_ids(row) == row
