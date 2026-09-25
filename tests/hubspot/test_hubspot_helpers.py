@@ -165,6 +165,12 @@ def test_object_columns_use_properties_prefix(obj_name: str, expected_prefix: st
     assert hint["nullable"] is True
 
 
+@pytest.mark.parametrize("obj_name", ["companies", "contacts", "deals"])
+def test_object_columns_include_original_source(obj_name: str) -> None:
+    for prop in ("hs_analytics_source", "hs_analytics_source_data_1", "hs_analytics_source_data_2"):
+        assert f"properties__{prop}" in _OBJECT_COLUMNS[obj_name]
+
+
 def test_engagements_columns_have_association_fields() -> None:
     for col in ("associations__contact_ids", "associations__company_ids", "associations__deal_ids"):
         assert col in _OBJECT_COLUMNS["engagements"]

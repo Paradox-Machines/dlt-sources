@@ -22,6 +22,8 @@ RESOURCES: tuple[str, ...] = (
     "deals",
     "activities",
     "stages",
+    "deal_fields",
+    "person_fields",
 )
 
 # Pipedrive's `/v1/activities` endpoint filters by the API-token user by

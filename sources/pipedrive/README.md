@@ -14,6 +14,8 @@ Pipedrive dlt source — extracts CRM data from
 | `deals` | `id` | `append` | `GET /v1/deals` | `update_time` |
 | `activities` | `id` | `append` | `GET /v1/activities` | `update_time` |
 | `stages` | `id` | `replace` | `GET /v1/stages` | *(none — full snapshot)* |
+| `deal_fields` | `id` | `replace` | `GET /v1/dealFields` | *(none — full snapshot)* |
+| `person_fields` | `id` | `replace` | `GET /v1/personFields` | *(none — full snapshot)* |
 
 ### Row transforms
 
