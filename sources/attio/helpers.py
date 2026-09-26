@@ -97,7 +97,9 @@ def active_scalar(entry: dict[str, Any]) -> Any:
     Attio attribute types each pick a different field name for the scalar
     (value/email_address/domain/full_name/original_phone_number/
     formatted_address/currency_value/referenced_actor_id/target_record_id,
-    plus status.title). Returns the first one found, or None.
+    plus status.title and select option.title). Returns the first one found,
+    or None. A multi-select attribute has one active entry per chosen option;
+    only the first is promoted.
     """
     for key in (
         "value",
@@ -112,9 +114,10 @@ def active_scalar(entry: dict[str, Any]) -> Any:
     ):
         if key in entry:
             return entry[key]
-    status = entry.get("status")
-    if isinstance(status, dict):
-        return status.get("title")
+    for key in ("status", "option"):
+        nested = entry.get(key)
+        if isinstance(nested, dict):
+            return nested.get("title")
     return None
 
 

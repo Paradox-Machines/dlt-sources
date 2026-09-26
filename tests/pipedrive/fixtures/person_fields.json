@@ -1,0 +1,15 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 40,
+      "key": "fa0aac50fcf7a0d7bd682d6a3af879fda9eff7d9",
+      "name": "Lead Source",
+      "field_type": "varchar",
+      "options": null
+    }
+  ],
+  "additional_data": {
+    "pagination": {"start": 0, "limit": 100, "more_items_in_collection": false}
+  }
+}

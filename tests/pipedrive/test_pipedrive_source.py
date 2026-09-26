@@ -16,7 +16,7 @@ BASE = "https://api.pipedrive.com/v1"
 
 
 def _register_all_mocks(rsps: responses.RequestsMock) -> None:
-    """Register canned responses for all 7 pipedrive endpoints."""
+    """Register canned responses for all 9 pipedrive endpoints."""
     # /recents (users)
     register_get(rsps, f"{BASE}/recents", load_fixture("pipedrive", "users_recents"))
     # /persons — two pages
@@ -32,6 +32,8 @@ def _register_all_mocks(rsps: responses.RequestsMock) -> None:
     register_get(rsps, f"{BASE}/activities", load_fixture("pipedrive", "activities"))
     # /stages
     register_get(rsps, f"{BASE}/stages", load_fixture("pipedrive", "stages"))
+    register_get(rsps, f"{BASE}/dealFields", load_fixture("pipedrive", "deal_fields"))
+    register_get(rsps, f"{BASE}/personFields", load_fixture("pipedrive", "person_fields"))
 
 
 @responses.activate
@@ -42,7 +44,17 @@ def test_pipedrive_source_runs_against_duckdb(tmp_pipeline: object) -> None:
 
     assert not info.has_failed_jobs
     table_names = {t["name"] for t in tmp_pipeline.default_schema.data_tables()}  # type: ignore[attr-defined]
-    expected = {"users", "persons", "leads", "organizations", "deals", "activities", "stages"}
+    expected = {
+        "users",
+        "persons",
+        "leads",
+        "organizations",
+        "deals",
+        "activities",
+        "stages",
+        "deal_fields",
+        "person_fields",
+    }
     assert expected <= table_names
 
 
@@ -138,3 +150,23 @@ def test_stages_resource_uses_replace_disposition(tmp_pipeline: object) -> None:
     assert len(rows) == 2
     assert rows[0] == (1, "Qualified", "Sales Pipeline")
     assert rows[1] == (5, "Proposal", "Sales Pipeline")
+
+
+@responses.activate
+def test_deal_fields_land_option_labels(tmp_pipeline: object) -> None:
+    """Deal field options land as a child table keyed back to their field."""
+    _register_all_mocks(responses.mock)
+    tmp_pipeline.run(pipedrive_source(api_key="test-key", base_url=BASE))  # type: ignore[attr-defined]
+
+    with tmp_pipeline.sql_client() as client:  # type: ignore[attr-defined]
+        rows = client.execute_sql(
+            "SELECT f.key, o.id, o.label FROM deal_fields f "
+            "JOIN deal_fields__options o ON o._dlt_parent_id = f._dlt_id "
+            "ORDER BY f.key, o.label"
+        )
+    assert rows == [
+        ("channel", "198", "Event"),
+        ("channel", "3", "Website"),
+        ("status", "lost", "Lost"),
+        ("status", "won", "Won"),
+    ]

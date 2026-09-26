@@ -155,6 +155,7 @@ def test_paginator_rejects_page_size_above_attio_maximum():
         ({"referenced_actor_id": "actor-1"}, "actor-1"),
         ({"target_record_id": "rec-99"}, "rec-99"),
         ({"status": {"title": "Won"}}, "Won"),
+        ({"option": {"title": "Field Marketing"}}, "Field Marketing"),
         ({}, None),
     ],
 )

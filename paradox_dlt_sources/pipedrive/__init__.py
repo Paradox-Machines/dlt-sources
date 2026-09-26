@@ -1,4 +1,4 @@
-"""Pipedrive dlt source — 7 resources matching the legacy Airbyte streams.
+"""Pipedrive dlt source — the 7 legacy Airbyte streams plus field definitions.
 
 Public surface mirrors the Airbyte connector: same resource names, same
 field shapes after parquet schema inference.
@@ -20,6 +20,12 @@ Resources:
 - ``deals``         — ``/deals``; incremental on ``update_time``
 - ``activities``    — ``/activities``; incremental on ``update_time``
 - ``stages``        — ``/stages``; full ``replace`` each run (no update cursor)
+- ``deal_fields``   — ``/dealFields``; full ``replace`` each run
+- ``person_fields`` — ``/personFields``; full ``replace`` each run
+
+The ``*_fields`` resources carry the labels for option-coded values (e.g. the
+deal ``channel`` id) and the names behind custom-field hash keys. Their
+``options`` arrays land as the ``<resource>__options`` child tables.
 """
 
 from __future__ import annotations
@@ -37,6 +43,7 @@ from .helpers import (
     flatten_deal_user_refs,
     flatten_person_contact_arrays,
     flatten_person_owner_ref,
+    stringify_field_option_ids,
 )
 from .settings import (
     ACTIVITIES_ALL_USERS_PARAM,
@@ -59,20 +66,30 @@ _OBJECT_COLUMNS: dict[str, dict[str, dict[str, Any]]] = {
         bigint=("owner_id", "org_id"),
     ),
     "leads": columns(
-        text=("title", "source_name"),
-        bigint=("owner_id", "creator_id", "person_id", "organization_id"),
+        text=("title", "source_name", "origin", "channel_id"),
+        bigint=("owner_id", "creator_id", "person_id", "organization_id", "channel"),
     ),
     "organizations": columns(
         text=("name", "owner_name"),
     ),
     "deals": columns(
-        text=("title", "currency", "status", "person_name", "owner_name"),
+        text=(
+            "title",
+            "currency",
+            "status",
+            "person_name",
+            "owner_name",
+            "origin",
+            "channel_id",
+            "source_lead_id",
+        ),
         bigint=(
             "stage_id",
             "pipeline_id",
             "person_id",
             "user_id",
             "creator_user_id",
+            "channel",
         ),
     ),
     "activities": columns(
@@ -96,6 +113,14 @@ _OBJECT_COLUMNS: dict[str, dict[str, dict[str, Any]]] = {
             "rotten_days",
         ),
     ),
+    "deal_fields": columns(
+        text=("key", "name", "field_type"),
+        bigint=("id",),
+    ),
+    "person_fields": columns(
+        text=("key", "name", "field_type"),
+        bigint=("id",),
+    ),
 }
 
 
@@ -104,7 +129,7 @@ def pipedrive_source(
     api_key: str = dlt.secrets.value,
     base_url: str = PIPEDRIVE_API_BASE_URL,
 ) -> list[Any]:
-    """Pipedrive source factory — yields 7 resources.
+    """Pipedrive source factory — yields 9 resources.
 
     Args:
         api_key: Pipedrive Personal API token. Resolved from secrets by default.
@@ -224,6 +249,21 @@ def pipedrive_source(
         ):
             yield from page
 
+    def _fields_resource(resource_name: str, endpoint: str) -> Any:
+        @dlt.resource(
+            name=resource_name,
+            primary_key="id",
+            write_disposition="replace",
+            columns=_OBJECT_COLUMNS[resource_name],
+        )
+        def _r() -> Iterator[Row]:
+            for page in client.paginate(
+                endpoint, params={"limit": DEFAULT_PAGE_SIZE, "start": DEFAULT_START}
+            ):
+                yield from page
+
+        return _r().add_map(stringify_field_option_ids)
+
     # Pipedrive's `deals` endpoint returns `user_id` and `creator_user_id`
     # as nested `{id, name, email, ...}` objects rather than scalar ids.
     deals = _list_resource("deals", cursor_field="update_time").add_map(flatten_deal_user_refs)
@@ -236,6 +276,8 @@ def pipedrive_source(
         deals,
         _list_resource("activities", cursor_field="update_time"),
         stages,
+        _fields_resource("deal_fields", "/dealFields"),
+        _fields_resource("person_fields", "/personFields"),
     ]
 
 

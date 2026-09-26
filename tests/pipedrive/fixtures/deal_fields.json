@@ -1,0 +1,51 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": 11,
+      "key": "status",
+      "name": "Status",
+      "field_type": "status",
+      "options": [
+        {
+          "id": "won",
+          "label": "Won"
+        },
+        {
+          "id": "lost",
+          "label": "Lost"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "key": "channel",
+      "name": "Source channel",
+      "field_type": "enum",
+      "options": [
+        {
+          "id": 3,
+          "label": "Website"
+        },
+        {
+          "id": 198,
+          "label": "Event"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "key": "channel_id",
+      "name": "Source channel ID",
+      "field_type": "varchar",
+      "options": null
+    }
+  ],
+  "additional_data": {
+    "pagination": {
+      "start": 0,
+      "limit": 100,
+      "more_items_in_collection": false
+    }
+  }
+}

@@ -36,6 +36,12 @@ COMPANY_PROPERTIES: tuple[str, ...] = (
     "hubspot_owner_id",
     "createdate",
     "hs_lastmodifieddate",
+    "hs_analytics_source",
+    "hs_analytics_source_data_1",
+    "hs_analytics_source_data_2",
+    "hs_analytics_latest_source",
+    "hs_analytics_latest_source_data_1",
+    "hs_analytics_latest_source_data_2",
 )
 CONTACT_PROPERTIES: tuple[str, ...] = (
     "email",
@@ -52,6 +58,15 @@ CONTACT_PROPERTIES: tuple[str, ...] = (
     "hubspot_owner_id",
     "createdate",
     "hs_lastmodifieddate",
+    "hs_analytics_source",
+    "hs_analytics_source_data_1",
+    "hs_analytics_source_data_2",
+    "hs_latest_source",
+    "hs_latest_source_data_1",
+    "hs_latest_source_data_2",
+    "hs_analytics_first_url",
+    "hs_analytics_first_referrer",
+    "hs_object_source_label",
 )
 DEAL_PROPERTIES: tuple[str, ...] = (
     "dealname",
@@ -68,6 +83,12 @@ DEAL_PROPERTIES: tuple[str, ...] = (
     "closedate",
     "createdate",
     "hs_lastmodifieddate",
+    "hs_analytics_source",
+    "hs_analytics_source_data_1",
+    "hs_analytics_source_data_2",
+    "hs_analytics_latest_source",
+    "hs_analytics_latest_source_data_1",
+    "hs_analytics_latest_source_data_2",
 )
 
 CRM_OBJECT_PROPERTIES: dict[str, tuple[str, ...]] = {
