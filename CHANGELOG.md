@@ -7,10 +7,12 @@ and the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ## [Unreleased]
 
+## [0.1.0a10] — 2026-09-26
+
 ### Added
 - `hubspot` — original and latest traffic source properties (`hs_analytics_source`, `hs_analytics_source_data_1/2`, and the latest-source equivalents) on companies, contacts and deals. Contacts also carry `hs_analytics_first_url`, `hs_analytics_first_referrer` and `hs_object_source_label`. Existing records only pick these up on their next update unless the incremental cursor is reset.
 - `attio` — select attributes (e.g. a deal's `deal_source`) are promoted to top-level columns as their option title, alongside the existing status handling. Multi-select attributes promote their first active option.
-- `pipedrive` — `deal_fields` and `person_fields` resources (full replace). Their `options` child tables label option-coded values such as the deal `channel`. Column hints for deal and lead `origin`, `channel`, `channel_id` and `source_lead_id`.
+- `pipedrive` — `deal_fields` and `person_fields` resources (full replace). Their `options` child tables label option-coded values such as the deal `channel`. Option ids land as text, since built-in options use string ids and custom ones use integers. Column hints for deal and lead `origin`, `channel`, `channel_id` and `source_lead_id`.
 
 ## [0.1.0a9] — 2026-07-30
 
