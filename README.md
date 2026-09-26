@@ -12,7 +12,7 @@
 | paradox\_dlt\_sources/apollo\_io/helpers.py       |       19 |        1 |     95% |        44 |
 | paradox\_dlt\_sources/apollo\_io/settings.py      |       12 |        0 |    100% |           |
 | paradox\_dlt\_sources/attio/\_\_init\_\_.py       |       56 |        0 |    100% |           |
-| paradox\_dlt\_sources/attio/helpers.py            |       72 |        2 |     97% |  133, 169 |
+| paradox\_dlt\_sources/attio/helpers.py            |       73 |        2 |     97% |  136, 172 |
 | paradox\_dlt\_sources/attio/settings.py           |        7 |        0 |    100% |           |
 | paradox\_dlt\_sources/github/\_\_init\_\_.py      |      130 |        5 |     96% |170, 338-341 |
 | paradox\_dlt\_sources/github/helpers.py           |       44 |        0 |    100% |           |
@@ -32,8 +32,8 @@
 | paradox\_dlt\_sources/notion/\_\_init\_\_.py      |       77 |        2 |     97% |  367, 403 |
 | paradox\_dlt\_sources/notion/helpers.py           |       25 |        0 |    100% |           |
 | paradox\_dlt\_sources/notion/settings.py          |        9 |        0 |    100% |           |
-| paradox\_dlt\_sources/pipedrive/\_\_init\_\_.py   |       43 |        1 |     98% |       205 |
-| paradox\_dlt\_sources/pipedrive/helpers.py        |       46 |        0 |    100% |           |
+| paradox\_dlt\_sources/pipedrive/\_\_init\_\_.py   |       49 |        1 |     98% |       230 |
+| paradox\_dlt\_sources/pipedrive/helpers.py        |       51 |        0 |    100% |           |
 | paradox\_dlt\_sources/pipedrive/settings.py       |        7 |        0 |    100% |           |
 | paradox\_dlt\_sources/quickbooks/\_\_init\_\_.py  |       47 |        0 |    100% |           |
 | paradox\_dlt\_sources/quickbooks/helpers.py       |       85 |        1 |     99% |       263 |
@@ -41,7 +41,7 @@
 | paradox\_dlt\_sources/stripe/\_\_init\_\_.py      |       33 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/helpers.py           |       62 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/settings.py          |        3 |        0 |    100% |           |
-| **TOTAL**                                         | **1615** |   **58** | **96%** |           |
+| **TOTAL**                                         | **1627** |   **58** | **96%** |           |
 
 
 ## Setup coverage badge
