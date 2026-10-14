@@ -1,0 +1,25 @@
+{
+  "page": 1,
+  "pageSize": 2,
+  "hasMore": true,
+  "data": [
+    {
+      "id": 501,
+      "formId": 9,
+      "formName": "AC Service Form",
+      "submittedOn": "2024-03-01T15:00:00Z",
+      "owners": [{"type": "Job", "id": 1001}],
+      "units": [
+        {"name": "Refrigerant", "units": [{"name": "Refrigerant type", "value": "R-410A"}, {"name": "Pounds added", "value": "2.5"}]}
+      ]
+    },
+    {
+      "id": 502,
+      "formId": 9,
+      "formName": "AC Service Form",
+      "submittedOn": "2024-03-01T16:00:00Z",
+      "owners": [{"type": "Job", "id": 1002}],
+      "units": [{"name": "Unit details", "units": [{"name": "Serial", "value": "SN-1"}]}]
+    }
+  ]
+}
