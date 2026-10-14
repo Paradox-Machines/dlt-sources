@@ -7,6 +7,9 @@ and the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ## [Unreleased]
 
+### Added
+- `sage_intacct` — Sage Intacct REST API v1 via the query service: entities, locations, departments, classes (replace) and projects, employees, customers, vendors, gl_accounts, journal_entries, journal_entry_lines, ar_invoices, ar_invoice_lines, ar_payments, ap_bills, ap_bill_lines, ap_payments, budgets, budget_details (incremental on `audit.modifiedDateTime` via `cursor.start_value`). OAuth2 client credentials with per-entity `user@company|entity` tokens, cached and refreshed before expiry. `entity_ids` iterates entities; every row carries `entity_id` and primary keys are `(entity_id, key)`.
+
 ## [0.1.0a10] — 2026-09-26
 
 ### Added
