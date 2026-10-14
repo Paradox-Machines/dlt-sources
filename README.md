@@ -41,7 +41,7 @@ dlt init attio duckdb --location https://github.com/Paradox-Machines/dlt-sources
 This drops `attio/`, `attio_pipeline.py`, `requirements.txt`, and
 `.dlt/{secrets,config}.toml` into your cwd, with secret keys pre-populated
 from the source signature. Substitute any of `agree_com`, `attio`, `github`,
-`hubspot`, `notion`, `pipedrive`, `quickbooks`, `stripe` for the source name,
+`hubspot`, `notion`, `pipedrive`, `quickbooks`, `sage_intacct`, `stripe` for the source name,
 and any [dlt destination](https://dlthub.com/docs/dlt-ecosystem/destinations)
 for `duckdb`. Run `dlt init --list-sources --location <url>` to enumerate.
 
@@ -63,6 +63,7 @@ for `duckdb`. Run `dlt init --list-sources --location <url>` to enumerate.
 | [notion](paradox_dlt_sources/notion/README.md) | beta | users, databases, pages, blocks, comments |
 | [pipedrive](paradox_dlt_sources/pipedrive/README.md) | beta | persons, deals, leads, activities, organizations, stages, users_recents |
 | [quickbooks](paradox_dlt_sources/quickbooks/README.md) | beta | 24 entities (invoices, customers, accounts, transactions, …) |
+| [sage_intacct](paradox_dlt_sources/sage_intacct/README.md) | beta | journal_entry_lines (GL detail), journal_entries, gl_accounts, AR invoices/lines/payments, AP bills/lines/payments, budgets, dimensions; multi-entity |
 | [stripe](paradox_dlt_sources/stripe/README.md) | beta | charges, customers, invoices, refunds, invoice_line_items |
 
 More sources coming as we port them from our internal pipeline. See

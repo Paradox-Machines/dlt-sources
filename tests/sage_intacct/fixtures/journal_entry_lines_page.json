@@ -1,0 +1,40 @@
+{
+  "ia::result": [
+    {
+      "key": "5001",
+      "id": "5001",
+      "journalEntry": {"key": "901", "id": "901"},
+      "lineNumber": 1,
+      "txnType": "debit",
+      "txnAmount": "1250.75",
+      "baseAmount": "1250.75",
+      "entryDate": "2024-03-31",
+      "glAccount": {"key": "77", "id": "5000", "name": "Cost of Goods Sold"},
+      "dimensions": {
+        "department": {"key": "12", "id": "HVAC-SVC"},
+        "location": {"key": "3", "id": "INTERSTATE"}
+      },
+      "audit": {"modifiedDateTime": "2024-04-01T10:15:00Z"}
+    },
+    {
+      "key": "5002",
+      "id": "5002",
+      "journalEntry.key": "901",
+      "journalEntry.id": "901",
+      "lineNumber": 2,
+      "txnType": "credit",
+      "txnAmount": "1250.75",
+      "baseAmount": "1250.75",
+      "entryDate": "2024-03-31",
+      "glAccount.key": "12",
+      "glAccount.id": "1000",
+      "glAccount.name": "Operating Cash",
+      "dimensions.department.key": "12",
+      "dimensions.department.id": "HVAC-SVC",
+      "dimensions.location.key": "3",
+      "dimensions.location.id": "INTERSTATE",
+      "audit.modifiedDateTime": "2024-04-01T10:15:00Z"
+    }
+  ],
+  "ia::meta": {"totalCount": 2, "start": 1, "pageSize": 1000, "next": null, "previous": null}
+}
