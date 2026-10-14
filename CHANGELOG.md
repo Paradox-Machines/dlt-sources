@@ -7,6 +7,9 @@ and the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 
 ## [Unreleased]
 
+### Added
+- `inova` — iNova Payroll (private-labelled UKG Ready REST v2) for Interstate AC (PA-1032). OAuth2 client-credentials. Resources: `companies` (EINs), `cost_centers`, `employees` (incremental via `/employees/changed?since=` on `cursor.start_value`), `compensation_history`, `payrolls` (incremental on `pay_date`), `pay_statements` with `pay_statement_earnings` / `_deductions` / `_taxes`. Every row carries `company_id` + `ein_id`. SSN, DOB, PIN and bank fields are stripped. Handles 503 `X-CallLimit-TimeToWait` throttling.
+
 ## [0.1.0a10] — 2026-09-26
 
 ### Added

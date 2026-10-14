@@ -1,0 +1,13 @@
+{"employee": {"account_id": 3588}, "id": 280064, "pay_date": "2025-02-15", "status": "FINALIZED", "type": {"id": 18432, "display_name": "Regular"}, "pay_period_start": "2025-02-01", "pay_period_end": "2025-02-14",
+ "earnings": [
+  {"id": 361984, "date_range_from": "2025-02-01", "date_range_to": "2025-02-14", "hours": 80, "base_rate": 30.29, "quantity": 0, "ee_amount": 2423.2, "earning": {"name": "Regular", "code": "REG"}, "type_name": "Earning", "batch": {"id": 262400, "display_name": "Regular Earnings"}, "cost_centers": [{"index": 0, "value": {"id": 1540929}}]},
+  {"id": 361985, "hours": 4, "base_rate": 45.44, "quantity": 0, "ee_amount": 181.76, "earning": {"name": "Overtime", "code": "OT"}, "type_name": "Earning", "batch": {"id": 262400, "display_name": "Regular Earnings"}}
+ ],
+ "deductions": [
+  {"id": 362240, "hours": 0, "quantity": 0, "ee_amount": 100, "er_amount": 25, "deduction": {"name": "401k", "code": "401k"}, "type_name": "Deduction", "batch": {"id": 262400, "display_name": "Regular Earnings"}}
+ ],
+ "taxes": [
+  {"id": 363000, "type_name": "Tax", "ee_amount": 161.6, "er_amount": 161.6, "ee_gross_wage": 2604.96, "er_gross_wage": 2604.96, "company_tax": {"code": "FICA", "name": "Social Security", "abbrev": "SS"}, "batch": {"id": 262400, "display_name": "Regular Earnings"}}
+ ],
+ "messages": []
+}

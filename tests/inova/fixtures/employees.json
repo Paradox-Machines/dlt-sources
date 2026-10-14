@@ -1,0 +1,4 @@
+{"employees": [
+  {"id": 3588, "username": "jdoe", "first_name": "Jane", "last_name": "Doe", "employee_id": "E001", "external_id": "X1", "primary_account_id": 3588, "ein_name": "Interstate AC Holdings", "dates": {"hired": "2019-03-01", "started": "2019-03-01"}, "status": "Active", "social_security": "123-45-6789", "birthday": "1980-01-01", "_links": {"self": "https://example/employees/3588"}},
+  {"id": 3589, "username": "bsmith", "first_name": "Bob", "last_name": "Smith", "employee_id": "E002", "primary_account_id": 3589, "ein_name": "Interstate AC Services", "dates": {"hired": "2021-06-14", "terminated": "2024-02-01"}, "status": "Terminated", "_links": {"self": "https://example/employees/3589"}}
+]}
