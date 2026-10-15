@@ -219,17 +219,16 @@ def test_start_date_seeds_first_run(tmp_pipeline: Any) -> None:
             json=_export_body([]),
             match=[matchers.query_param_matcher({"from": "2024-01-01"})],
         )
-        rsps.add(
+        job_types = rsps.add(
             responses.GET,
             _url(_INTERSTATE, "jpm", "job-types"),
             json={"hasMore": False, "data": []},
-            match=[
-                matchers.query_param_matcher(
-                    {"modifiedOnOrAfter": "2024-01-01T00:00:00Z"}, strict_match=False
-                )
-            ],
         )
         tmp_pipeline.run(_source([_INTERSTATE], ["jobs", "job_types"], start_date="2024-01-01"))
+    # Reference collections ignore start_date: a floored first load would drop every
+    # lookup row not modified since then, and incremental runs never backfill them.
+    assert job_types.call_count == 1
+    assert "modifiedOnOrAfter" not in job_types.calls[0].request.url
 
 
 def test_forbidden_resource_for_one_tenant_is_skipped(

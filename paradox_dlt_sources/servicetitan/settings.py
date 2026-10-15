@@ -85,6 +85,10 @@ class Endpoint:
         cursor_param: Query param receiving the cursor's start value.
         params: Fixed query params sent on every request.
         columns: Extra column hints (snake_case name -> dlt data type).
+        reference: Small lookup collection (business units, job types, ...).
+            Always loaded in full: ``start_date`` would otherwise drop every
+            row not modified since that date, and later incremental runs never
+            backfill them.
     """
 
     name: str
@@ -97,6 +101,7 @@ class Endpoint:
     cursor_param: str = INCREMENTAL_PARAM
     params: Mapping[str, str] = field(default_factory=dict)
     columns: Mapping[str, str] = field(default_factory=dict)
+    reference: bool = False
 
 
 # Column hints every table carries, so tenant tagging and the compound key
@@ -135,6 +140,7 @@ ENDPOINTS: tuple[Endpoint, ...] = (
         "Job Planning & Management: Job Cancel Reasons (read)",
         incremental=True,
         params={"active": "Any"},
+        reference=True,
     ),
     Endpoint(
         "job_types",
@@ -144,6 +150,7 @@ ENDPOINTS: tuple[Endpoint, ...] = (
         "Job Planning & Management: Job Types (read)",
         incremental=True,
         params={"active": "Any"},
+        reference=True,
     ),
     # --- crm ---------------------------------------------------------------
     Endpoint("customers", "crm", "export/customers", "export", "CRM: Customers (read)"),
@@ -186,6 +193,7 @@ ENDPOINTS: tuple[Endpoint, ...] = (
         "Inventory: Vendors (read)",
         incremental=True,
         params={"active": "Any"},
+        reference=True,
     ),
     # --- sales ---------------------------------------------------------------
     # ``items`` lands in the ``estimates__items`` child table.
@@ -199,6 +207,7 @@ ENDPOINTS: tuple[Endpoint, ...] = (
         "export/business-units",
         "export",
         "Settings: Business Units (read)",
+        reference=True,
     ),
     Endpoint(
         "technicians",
@@ -214,8 +223,16 @@ ENDPOINTS: tuple[Endpoint, ...] = (
             "role_ids": "json",
             "skills": "json",
         },
+        reference=True,
     ),
-    Endpoint("employees", "settings", "export/employees", "export", "Settings: Employees (read)"),
+    Endpoint(
+        "employees",
+        "settings",
+        "export/employees",
+        "export",
+        "Settings: Employees (read)",
+        reference=True,
+    ),
     # --- forms ---------------------------------------------------------------
     # ``units`` holds the filled-in form tree (refrigerant usage, parts, unit
     # details); it lands as one JSON column so arbitrary form layouts never

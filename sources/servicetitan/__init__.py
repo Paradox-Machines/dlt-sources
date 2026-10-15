@@ -153,6 +153,8 @@ def _make_resource(
     page_size: int,
 ) -> DltResource:
     """Build the dlt resource reading one endpoint for one tenant."""
+    if endpoint.reference:
+        start_date = None
     resource_kwargs: Mapping[str, Any] = {
         "name": f"{endpoint.name}_{tenant.tenant_id}",
         "table_name": endpoint.name,
