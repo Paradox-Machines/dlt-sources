@@ -8,6 +8,7 @@ and the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 ## [Unreleased]
 
 ### Added
+- `servicetitan` — multi-tenant ServiceTitan source (PA-1030). One app key shared across tenants; per-tenant OAuth2 client-credentials. Every row carries `tenant_id` / `tenant_name` and every primary key is `(tenant_id, id)`. Resources: jobs, appointments, projects, job_cancel_reasons, job_types, customers, locations, contacts, bookings, invoices (+items), payments, inventory_bills, purchase_orders (+items), vendors, estimates (+items), business_units, technicians, employees, form_submissions. `/export/*` endpoints resume from the saved `continueFrom` token; page endpoints are incremental on `modifiedOn` via `modifiedOnOrAfter` (form submissions: `submittedOn` via `submittedOnOrAfter`) = `cursor.start_value`. A 403 on one resource for one tenant is skipped with a warning; 429 honours `Retry-After`.
 - `inova` — iNova Payroll (private-labelled UKG Ready REST v2) for Interstate AC (PA-1032). OAuth2 client-credentials. Resources: `companies` (EINs), `cost_centers`, `employees` (incremental via `/employees/changed?since=` on `cursor.start_value`), `compensation_history`, `payrolls` (incremental on `pay_date`), `pay_statements` with `pay_statement_earnings` / `_deductions` / `_taxes`. Every row carries `company_id` + `ein_id`. SSN, DOB, PIN and bank fields are stripped. Handles 503 `X-CallLimit-TimeToWait` throttling.
 
 ## [0.1.0a10] — 2026-09-26
