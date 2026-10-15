@@ -9,6 +9,7 @@ earnings, deductions and taxes (employee + employer amounts).
 
 | Finding | Source |
 |---|---|
+| Vendor confirmed (2026-10-15): Interstate AC's ServiceTitan tenant has an installed API app "Inova Payroll", published by Inova Payroll (https://www.inovapayroll.com). The product is Inova Payroll. | Client ServiceTitan tenant (PA-1032) |
 | iNova Payroll (Nashville, inovapayroll.com) sells "Inova HCM", a private-labelled **UKG Ready** — it has been UKG Ready's largest reseller since 2007. UKG agreed to acquire Inova in Dec 2025; customers stay on UKG Ready. | [UKG newsroom](https://www.ukg.com/company/newsroom/ukg-agrees-acquire-inova-payroll), [Inova news](https://inovapayroll.com/inova-news/ukg-acquisition-agreement/) |
 | Inova advertises a free "Open API" REST API for the HCM suite but publishes no endpoint reference of its own. | [Inova Open API](https://inovapayroll.com/partners/open-api/), [Inova FAQs](https://inovapayroll.com/resources/faqs/) |
 | Inova's login page also lists **Evolution** (Asure's payroll platform) for legacy clients. Inova is discontinuing Evolution; this source does **not** support Evolution. | [Inova log-in](https://inovapayroll.com/resources/log-in/), [Evolution notice](https://www.evolutionpayrollservices.com/inova-payroll-discontinues-evolution-payroll-software) |
