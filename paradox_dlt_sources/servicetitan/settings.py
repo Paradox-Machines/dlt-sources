@@ -32,6 +32,9 @@ TOKEN_REFRESH_SAFETY_SECONDS = 60
 DEFAULT_TOKEN_TTL_SECONDS = 900
 
 APP_KEY_HEADER = "ST-App-Key"
+# ServiceTitan's auth host returns 403 Forbidden to the default Python HTTP user agents
+# (verified against a live tenant); every request identifies the source explicitly.
+USER_AGENT = "paradox-dlt-sources-servicetitan (+https://github.com/Paradox-Machines/dlt-sources)"
 
 # --- API -----------------------------------------------------------------------
 # Override in tests via the SERVICETITAN_API_BASE_URL env var.

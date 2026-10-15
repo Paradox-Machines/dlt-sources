@@ -29,6 +29,7 @@ from .settings import (
     PATH_TEMPLATE,
     PATH_TOKEN,
     TOKEN_REFRESH_SAFETY_SECONDS,
+    USER_AGENT,
     Endpoint,
 )
 
@@ -131,6 +132,7 @@ class ServiceTitanAuth(AuthBase):
         """Attach the bearer token and app key, refreshing the token if stale."""
         request.headers["Authorization"] = f"Bearer {self.access_token()}"
         request.headers[APP_KEY_HEADER] = self._app_key
+        request.headers["User-Agent"] = USER_AGENT
         return request
 
     def access_token(self) -> str:
@@ -152,7 +154,7 @@ class ServiceTitanAuth(AuthBase):
                 "client_id": self._client_id,
                 "client_secret": self._client_secret,
             },
-            headers={"Accept": "application/json"},
+            headers={"Accept": "application/json", "User-Agent": USER_AGENT},
             timeout=30,
         )
         response.raise_for_status()

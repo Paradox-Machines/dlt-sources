@@ -18,7 +18,12 @@ from paradox_dlt_sources.servicetitan.helpers import (
     tag_row,
     tenant_path,
 )
-from paradox_dlt_sources.servicetitan.settings import ENDPOINTS, ENDPOINTS_BY_NAME, PRIMARY_KEY
+from paradox_dlt_sources.servicetitan.settings import (
+    ENDPOINTS,
+    ENDPOINTS_BY_NAME,
+    PRIMARY_KEY,
+    USER_AGENT,
+)
 
 _AUTH = "https://auth.servicetitan.io"
 _API = "https://api.servicetitan.io"
@@ -102,6 +107,22 @@ def test_auth_caches_token_and_sets_headers() -> None:
     assert "grant_type=client_credentials" in body
     assert "client_id=c" in body
     assert "client_secret=s" in body
+
+
+@responses.activate
+def test_auth_sends_explicit_user_agent() -> None:
+    """ServiceTitan's auth host 403s default Python user agents; both calls must override it."""
+    responses.add(
+        responses.POST,
+        f"{_AUTH}/connect/token",
+        json={"access_token": "tok-1", "expires_in": 900},
+    )
+    auth = ServiceTitanAuth("c", "s", "app-key", _AUTH)
+    prepared = auth(requests.Request("GET", f"{_API}/x").prepare())
+    token_ua = responses.calls[0].request.headers["User-Agent"]
+    assert token_ua == USER_AGENT
+    assert prepared.headers["User-Agent"] == USER_AGENT
+    assert "python" not in USER_AGENT.lower()
 
 
 @responses.activate
