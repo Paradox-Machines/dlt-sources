@@ -63,6 +63,10 @@ def test_tenant_path() -> None:
         tenant_path(ENDPOINTS_BY_NAME["form_submissions"], "222")
         == "/forms/v2/tenant/222/submissions"
     )
+    assert (
+        tenant_path(ENDPOINTS_BY_NAME["job_cancel_reasons"], "111")
+        == "/jpm/v2/tenant/111/job-cancel-reasons"
+    )
 
 
 def test_tag_row_does_not_mutate_input() -> None:

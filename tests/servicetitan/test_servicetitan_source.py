@@ -320,13 +320,13 @@ def test_page_has_more_pagination(tmp_pipeline: Any) -> None:
             responses.GET,
             url,
             json=load_fixture("servicetitan", "form_submissions_page_1"),
-            match=[matchers.query_param_matcher({"page": "1", "pageSize": "2"})],
+            match=[matchers.query_param_matcher({"active": "Any", "page": "1", "pageSize": "2"})],
         )
         rsps.add(
             responses.GET,
             url,
             json=load_fixture("servicetitan", "form_submissions_page_2"),
-            match=[matchers.query_param_matcher({"page": "2", "pageSize": "2"})],
+            match=[matchers.query_param_matcher({"active": "Any", "page": "2", "pageSize": "2"})],
         )
         tmp_pipeline.run(_source([_INTERSTATE], ["form_submissions"], page_size=2))
         assert len(_api_calls(rsps, url)) == 2
@@ -335,6 +335,31 @@ def test_page_has_more_pagination(tmp_pipeline: Any) -> None:
     assert [r[0] for r in rows] == [501, 502, 503]
     assert "R-410A" in str(rows[0][2])
     assert "form_submissions__units" not in tmp_pipeline.default_schema.tables
+
+
+def test_form_submissions_incremental_on_submitted_on(tmp_pipeline: Any) -> None:
+    url = _url(_INTERSTATE, "forms", "submissions")
+    with responses.RequestsMock() as rsps:
+        _register_token(rsps)
+        rsps.add(responses.GET, url, json=load_fixture("servicetitan", "form_submissions_page_2"))
+        tmp_pipeline.run(_source([_INTERSTATE], ["form_submissions"]))
+        assert "submittedOnOrAfter" not in _api_calls(rsps, url)[0].request.params
+
+    with responses.RequestsMock() as rsps:
+        _register_token(rsps)
+        rsps.add(
+            responses.GET,
+            url,
+            json={"hasMore": False, "data": []},
+            match=[
+                matchers.query_param_matcher(
+                    {"submittedOnOrAfter": "2024-03-02T09:00:00Z"}, strict_match=False
+                )
+            ],
+        )
+        tmp_pipeline.run(_source([_INTERSTATE], ["form_submissions"]))
+        [call] = _api_calls(rsps, url)
+        assert "modifiedOnOrAfter" not in call.request.params
 
 
 def test_nested_items_land_in_child_table(tmp_pipeline: Any) -> None:

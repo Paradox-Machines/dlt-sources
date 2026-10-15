@@ -22,8 +22,9 @@ Pagination and incremental
   in resource state, so the next run resumes from it and only receives records
   changed since.  ``start_date`` seeds the first run (``from=YYYY-MM-DD``).
 * Page endpoints walk ``page`` / ``pageSize`` until ``hasMore`` is false.  Those
-  that support it are incremental on ``modifiedOn``: the request filter
-  ``modifiedOnOrAfter`` is ``cursor.start_value`` — the stable high-water mark
+  that support it are incremental on ``modifiedOn`` (forms: ``submittedOn``):
+  the request filter (``modifiedOnOrAfter`` / ``submittedOnOrAfter``) is
+  ``cursor.start_value`` — the stable high-water mark
   from the *previous* run — **not** ``cursor.last_value``, which shifts
   mid-extract (repo-wide convention).
 
@@ -65,8 +66,6 @@ from .settings import (
     ENDPOINTS,
     ENDPOINTS_BY_NAME,
     EXPORT_FROM_PARAM,
-    INCREMENTAL_CURSOR,
-    INCREMENTAL_PARAM,
     PRIMARY_KEY,
     Endpoint,
 )
@@ -178,14 +177,14 @@ def _make_resource(
 
         def incremental_rows(
             cursor: dlt.sources.incremental[str] = dlt.sources.incremental(  # noqa: B008
-                INCREMENTAL_CURSOR,
+                endpoint.cursor_field,
                 initial_value=initial_value,
                 on_cursor_value_missing="include",
             ),
         ) -> Iterator[list[Row]]:
             params = dict(endpoint.params)
             if cursor.start_value:
-                params[INCREMENTAL_PARAM] = cursor.start_value
+                params[endpoint.cursor_param] = cursor.start_value
             yield from skip_on_forbidden(
                 _list_pages(client, endpoint, tenant, params, page_size),
                 endpoint=endpoint,

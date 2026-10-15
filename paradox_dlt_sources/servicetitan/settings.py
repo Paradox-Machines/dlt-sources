@@ -9,7 +9,8 @@ Every ServiceTitan v2 path is tenant-scoped:
   the next run only receives records changed since.
 * ``page`` — classic list endpoints.  ``page`` (1-based) / ``pageSize``
   params, ``{"data": [...], "hasMore": bool}`` responses.  Where the endpoint
-  supports ``modifiedOnOrAfter`` the resource is incremental on ``modifiedOn``.
+  supports it the resource is incremental: ``modifiedOnOrAfter`` on
+  ``modifiedOn`` (``submittedOnOrAfter`` on ``submittedOn`` for forms).
 
 Reference: https://developer.servicetitan.io/apis/
 """
@@ -50,6 +51,9 @@ HTTP_FORBIDDEN = 403
 
 Pagination = Literal["export", "page"]
 
+INCREMENTAL_CURSOR = "modifiedOn"
+INCREMENTAL_PARAM = "modifiedOnOrAfter"
+
 MODULE_LABELS: Mapping[str, str] = {
     "jpm": "Job Planning & Management",
     "crm": "CRM",
@@ -73,7 +77,9 @@ class Endpoint:
         scope: Human-readable ServiceTitan app scope needed (used in the
             403 skip warning and the README).
         incremental: ``page`` endpoints only — filter server-side with
-            ``modifiedOnOrAfter`` and track ``modifiedOn``.
+            ``cursor_param`` and track ``cursor_field``.
+        cursor_field: Record field the incremental cursor tracks.
+        cursor_param: Query param receiving the cursor's start value.
         params: Fixed query params sent on every request.
         columns: Extra column hints (snake_case name -> dlt data type).
     """
@@ -84,6 +90,8 @@ class Endpoint:
     pagination: Pagination
     scope: str
     incremental: bool = False
+    cursor_field: str = INCREMENTAL_CURSOR
+    cursor_param: str = INCREMENTAL_PARAM
     params: Mapping[str, str] = field(default_factory=dict)
     columns: Mapping[str, str] = field(default_factory=dict)
 
@@ -99,8 +107,6 @@ BASE_COLUMNS: Mapping[str, str] = {
 
 PRIMARY_KEY = ("tenant_id", "id")
 
-INCREMENTAL_CURSOR = "modifiedOn"
-INCREMENTAL_PARAM = "modifiedOnOrAfter"
 EXPORT_FROM_PARAM = "from"
 
 ENDPOINTS: tuple[Endpoint, ...] = (
@@ -116,12 +122,16 @@ ENDPOINTS: tuple[Endpoint, ...] = (
     Endpoint(
         "projects", "jpm", "export/projects", "export", "Job Planning & Management: Projects (read)"
     ),
+    # No export feed exists for cancel reasons (``export/job-canceled-logs`` is
+    # the per-job cancel log, not the reason list).
     Endpoint(
         "job_cancel_reasons",
         "jpm",
-        "export/job-cancel-reasons",
-        "export",
+        "job-cancel-reasons",
+        "page",
         "Job Planning & Management: Job Cancel Reasons (read)",
+        incremental=True,
+        params={"active": "Any"},
     ),
     Endpoint(
         "job_types",
@@ -213,6 +223,10 @@ ENDPOINTS: tuple[Endpoint, ...] = (
         "submissions",
         "page",
         "Forms: Submissions (read)",
+        incremental=True,
+        cursor_field="submittedOn",
+        cursor_param="submittedOnOrAfter",
+        params={"active": "Any"},
         columns={
             "form_id": "bigint",
             "form_name": "text",

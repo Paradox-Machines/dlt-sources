@@ -8,7 +8,7 @@ and the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 ## [Unreleased]
 
 ### Added
-- `servicetitan` — multi-tenant ServiceTitan source (PA-1030). One app key shared across tenants; per-tenant OAuth2 client-credentials. Every row carries `tenant_id` / `tenant_name` and every primary key is `(tenant_id, id)`. Resources: jobs, appointments, projects, job_cancel_reasons, job_types, customers, locations, contacts, bookings, invoices (+items), payments, inventory_bills, purchase_orders (+items), vendors, estimates (+items), business_units, technicians, employees, form_submissions. `/export/*` endpoints resume from the saved `continueFrom` token; page endpoints are incremental on `modifiedOn` via `modifiedOnOrAfter` = `cursor.start_value`. A 403 on one resource for one tenant is skipped with a warning; 429 honours `Retry-After`.
+- `servicetitan` — multi-tenant ServiceTitan source (PA-1030). One app key shared across tenants; per-tenant OAuth2 client-credentials. Every row carries `tenant_id` / `tenant_name` and every primary key is `(tenant_id, id)`. Resources: jobs, appointments, projects, job_cancel_reasons, job_types, customers, locations, contacts, bookings, invoices (+items), payments, inventory_bills, purchase_orders (+items), vendors, estimates (+items), business_units, technicians, employees, form_submissions. `/export/*` endpoints resume from the saved `continueFrom` token; page endpoints are incremental on `modifiedOn` via `modifiedOnOrAfter` (form submissions: `submittedOn` via `submittedOnOrAfter`) = `cursor.start_value`. A 403 on one resource for one tenant is skipped with a warning; 429 honours `Retry-After`.
 
 ## [0.1.0a10] — 2026-09-26
 

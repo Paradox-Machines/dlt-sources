@@ -18,7 +18,7 @@ One dlt resource per (endpoint, tenant), named `{endpoint}_{tenant_id}` (e.g.
 | `jobs` | jpm | `export/jobs` | export token | continuation token | Job Planning & Management: Jobs (read) |
 | `appointments` | jpm | `export/appointments` | export token | continuation token | Job Planning & Management: Appointments (read) |
 | `projects` | jpm | `export/projects` | export token | continuation token | Job Planning & Management: Projects (read) |
-| `job_cancel_reasons` | jpm | `export/job-cancel-reasons` | export token | continuation token | Job Planning & Management: Job Cancel Reasons (read) |
+| `job_cancel_reasons` | jpm | `job-cancel-reasons?active=Any` | page / hasMore | `modifiedOnOrAfter` | Job Planning & Management: Job Cancel Reasons (read) |
 | `job_types` | jpm | `job-types?active=Any` | page / hasMore | `modifiedOnOrAfter` | Job Planning & Management: Job Types (read) |
 | `customers` | crm | `export/customers` | export token | continuation token | CRM: Customers (read) |
 | `locations` | crm | `export/locations` | export token | continuation token | CRM: Locations (read) |
@@ -33,7 +33,7 @@ One dlt resource per (endpoint, tenant), named `{endpoint}_{tenant_id}` (e.g.
 | `business_units` | settings | `export/business-units` | export token | continuation token | Settings: Business Units (read) |
 | `technicians` | settings | `export/technicians` | export token | continuation token | Settings: Technicians (read) |
 | `employees` | settings | `export/employees` | export token | continuation token | Settings: Employees (read) |
-| `form_submissions` | forms | `submissions` | page / hasMore | none (full read each run) | Forms: Submissions (read) |
+| `form_submissions` | forms | `submissions?active=Any` | page / hasMore | `submittedOnOrAfter` (on `submittedOn`) | Forms: Submissions (read) |
 
 The table lives in `settings.ENDPOINTS`; adding an endpoint is one entry.
 
@@ -57,13 +57,12 @@ inherits a busier tenant's high-water mark.
   resource state and sent as `from` on the next run, which then receives only
   records changed since. `start_date` (`YYYY-MM-DD`) seeds the first run as
   `from=<date>`; without it the first run exports full history.
-- **Page endpoints with `modifiedOnOrAfter`** are incremental on `modifiedOn`.
-  The filter is `cursor.start_value` — the stable high-water mark from the
-  *previous* run — **not** `cursor.last_value`, which shifts mid-extract and
-  would silently drop rows (the repo-wide convention). `start_date` seeds the
-  first run.
-- `form_submissions` has no server-side modified filter wired, so it re-reads
-  all submissions each run and merges.
+- **Page endpoints** (`job_types`, `job_cancel_reasons`, `vendors`) are
+  incremental on `modifiedOn` via `modifiedOnOrAfter`; `form_submissions` is
+  incremental on `submittedOn` via `submittedOnOrAfter`. The filter is
+  `cursor.start_value` — the stable high-water mark from the *previous* run —
+  **not** `cursor.last_value`, which shifts mid-extract and would silently drop
+  rows (the repo-wide convention). `start_date` seeds the first run.
 
 ### Errors and rate limits
 
