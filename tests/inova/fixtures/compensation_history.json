@@ -1,0 +1,5 @@
+{"compensations": [
+  {"id": 9001, "employee": {"account_id": 3588}, "effective_from": "2023-01-01", "amount": 60000, "amount_period": "YEAR", "hourly_pay": 28.85, "currency": "USD", "time": 2080, "time_period": "YEAR", "num_pp_in_year": 26},
+  {"id": 9002, "employee": {"account_id": 3588}, "effective_from": "2024-01-01", "amount": 63000, "amount_period": "YEAR", "hourly_pay": 30.29, "currency": "USD", "time": 2080, "time_period": "YEAR", "num_pp_in_year": 26},
+  {"id": 9003, "employee": {"account_id": 3589}, "effective_from": "2021-06-14", "amount": 25, "amount_period": "HOUR", "hourly_pay": 25, "currency": "USD"}
+]}

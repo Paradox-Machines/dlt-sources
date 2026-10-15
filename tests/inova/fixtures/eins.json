@@ -1,0 +1,4 @@
+{"items": [
+  {"id": 101, "ein_name": "Interstate AC Holdings", "ein_tax_id": "11-1111111", "ein_currency_code": "USD", "ein_country_id": 1},
+  {"id": 102, "ein_name": "Interstate AC Services", "ein_tax_id": "22-2222222", "ein_currency_code": "USD", "ein_country_id": 1}
+]}
