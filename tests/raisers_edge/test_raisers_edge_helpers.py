@@ -2,21 +2,26 @@
 
 from __future__ import annotations
 
-from datetime import date, timedelta
+import logging
+from datetime import date, datetime, timedelta, timezone
 from urllib.parse import parse_qs
 
 import pendulum
 import pytest
 import requests
 import responses
+from dlt.sources.helpers.rest_client.client import RESTClient
 
 from paradox_dlt_sources.raisers_edge.helpers import (
     ChangeWindow,
+    SkyLinkPaginator,
     SkyOAuth2Auth,
     SkyQuotaExceededError,
+    iter_rows,
     normalize_row,
     raise_on_quota,
     reconciliation_due,
+    to_date,
     to_utc,
 )
 
@@ -111,6 +116,37 @@ def test_normalize_row_dates_and_standard_columns() -> None:
 def test_to_utc_none_and_empty() -> None:
     assert to_utc(None, "UTC") is None
     assert to_utc("", "UTC") is None
+
+
+def test_date_parsers_accept_datetimes_from_the_destination() -> None:
+    aware = datetime(2026, 10, 1, 12, tzinfo=timezone(timedelta(hours=-4)))
+    assert to_utc(aware, "America/New_York") == pendulum.datetime(2026, 10, 1, 16, tz="UTC")
+    assert to_date(aware) == date(2026, 10, 1)
+    assert to_date(None) is None
+    with pytest.raises(ValueError, match="not a date-time"):
+        to_utc("P1D", "UTC")
+
+
+@responses.activate
+def test_iter_rows_warns_when_count_disagrees(caplog: pytest.LogCaptureFixture) -> None:
+    responses.add(
+        responses.GET,
+        "https://api.sky.blackbaud.com/constituent/v1/notes",
+        json={"count": 3, "value": [{"id": "1"}, {"id": "2"}]},
+    )
+    client = RESTClient(base_url="https://api.sky.blackbaud.com")
+    with caplog.at_level(logging.WARNING):
+        rows = list(
+            iter_rows(
+                client,
+                "/constituent/v1/notes",
+                resource="constituent_notes",
+                params={},
+                paginator=SkyLinkPaginator(),
+            )
+        )
+    assert [r["id"] for r in rows] == ["1", "2"]
+    assert "constituent_notes: source reported 3 rows, extracted 2" in caplog.text
 
 
 def test_change_window_floor_and_lookback() -> None:
