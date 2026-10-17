@@ -56,6 +56,7 @@ for `duckdb`. Run `dlt init --list-sources --location <url>` to enumerate.
 | [agree_com](paradox_dlt_sources/agree_com/README.md) | beta | agreements, contacts, invoices, schedules |
 | [apollo_io](paradox_dlt_sources/apollo_io/README.md) | beta | contacts, accounts, people, opportunities, sequences, users, email_accounts, labels |
 | [attio](paradox_dlt_sources/attio/README.md) | beta | companies, people, deals, lists, notes |
+| [ellucian_ethos](paradox_dlt_sources/ellucian_ethos/README.md) | beta | Banner via Ethos Integration: persons, students, sections, section_registrations, admissions, financial aid, … (change feed) |
 | [github](paradox_dlt_sources/github/README.md) | beta | organizations, users, repositories, pull_requests, commits, pull_request_commits, pull_request_stats |
 | [hubspot](paradox_dlt_sources/hubspot/README.md) | beta | companies, contacts, deals, engagements, deal_pipelines |
 | [m365_graph](paradox_dlt_sources/m365_graph/README.md) | beta | mail_documents, sharepoint_documents (NDA dropzone, fresh-vs-return classified) |
