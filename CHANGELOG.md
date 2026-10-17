@@ -8,6 +8,7 @@ and the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format.
 ## [Unreleased]
 
 ### Added
+- `ellucian_ethos` — Ellucian Banner through Ethos Integration (API key → 5-minute JWT, refreshed in-run). 66 Ethos resources covering people, academic structure, student records, registrations, admissions, financial aid and student accounts; FAFSA resources load only when named. Change capture via Ethos change notifications (`/consume`, one batch per run, acknowledged only after a successful load) with `<table>_versions` and a `change_notifications` replay log; full `offset`/`limit` reads on first run, `resync` and every `delete_reconciliation_interval`, with key-reconciliation tombstones skipped on incomplete walks.
 - `servicetitan` — multi-tenant ServiceTitan source (PA-1030). One app key shared across tenants; per-tenant OAuth2 client-credentials. Every row carries `tenant_id` / `tenant_name` and every primary key is `(tenant_id, id)`. Resources: jobs, appointments, projects, job_cancel_reasons, job_types, customers, locations, contacts, bookings, invoices (+items), payments, inventory_bills, purchase_orders (+items), vendors, estimates (+items), business_units, technicians, employees, form_submissions. `/export/*` endpoints resume from the saved `continueFrom` token; page endpoints are incremental on `modifiedOn` via `modifiedOnOrAfter` (form submissions: `submittedOn` via `submittedOnOrAfter`) = `cursor.start_value`. A 403 on one resource for one tenant is skipped with a warning; 429 honours `Retry-After`.
 
 ## [0.1.0a10] — 2026-09-26
