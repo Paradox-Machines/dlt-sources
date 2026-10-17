@@ -14,6 +14,7 @@ from typing import Any
 import dlt
 import pendulum
 import requests as _requests
+from dlt.destinations.exceptions import DatabaseUndefinedRelation
 from dlt.sources.helpers.rest_client.client import RESTClient
 from dlt.sources.helpers.rest_client.paginators import (
     BasePaginator,
@@ -400,7 +401,7 @@ def _sql_literal(value: Any) -> str:
 
 
 def _destination_table(table: str) -> Any | None:
-    """The pipeline's dataset when ``table`` exists in it, else ``None``."""
+    """The current pipeline when ``table`` exists in its schema, else ``None``."""
     pipeline = dlt.current.pipeline()
     if pipeline.default_schema_name is None:
         return None
@@ -408,6 +409,17 @@ def _destination_table(table: str) -> Any | None:
     if not schema_table or "_is_deleted" not in schema_table.get("columns", {}):
         return None
     return pipeline
+
+
+def _query(pipeline: Any, sql: str) -> tuple[list[str], list[tuple[Any, ...]]]:
+    """Run raw SQL on the destination; returns (column names, rows).
+
+    Uses the plain SQL client rather than ``pipeline.dataset()``, whose query lineage layer
+    depends on a matching sqlglot version.
+    """
+    with pipeline.sql_client() as client, client.execute_query(sql) as cursor:
+        names = [d[0] for d in cursor.description]
+        return names, [tuple(r) for r in cursor.fetchall()]
 
 
 def tombstones(
@@ -434,14 +446,20 @@ def tombstones(
     pipeline = _destination_table(table)
     if pipeline is None:
         return
-    dataset = pipeline.dataset()
+    with pipeline.sql_client() as client:
+        qualified = client.make_qualified_table_name(table)
     keys_sql = ", ".join(key_columns)
-    live_sql = f"SELECT {keys_sql} FROM {table} WHERE _is_deleted = false"
-    live = {tuple(r) for r in dataset.query(live_sql).fetchall()}
+    try:
+        _, live_rows = _query(
+            pipeline, f"SELECT {keys_sql} FROM {qualified} WHERE _is_deleted = false"
+        )
+    except DatabaseUndefinedRelation:
+        return
+    live = set(live_rows)
     missing = sorted(live - seen)
     if not missing:
         return
-    if live and len(missing) / len(live) > max_delete_share:
+    if len(missing) / len(live) > max_delete_share:
         raise RuntimeError(
             f"{table}: {len(missing)} of {len(live)} live keys are missing from the source "
             f"read, above max_delete_share={max_delete_share}. Refusing to tombstone them. "
@@ -462,9 +480,8 @@ def tombstones(
             + ")"
             for key in chunk
         )
-        relation = dataset.query(f"SELECT * FROM {table} WHERE {match}")
-        names = relation.columns
-        for values in relation.fetchall():
+        names, rows = _query(pipeline, f"SELECT * FROM {qualified} WHERE {match}")
+        for values in rows:
             row = {
                 n: (json.loads(v) if n in json_columns and isinstance(v, str) else v)
                 for n, v in zip(names, values, strict=True)

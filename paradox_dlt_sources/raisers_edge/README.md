@@ -117,7 +117,7 @@ List endpoints never return deleted records. On the reconciliation interval each
 resource does a full read (`last_modified=0001-01-01`, which still gets `sort_token`).
 Every live destination key missing from that read becomes a tombstone: the last loaded
 row with `_is_deleted = true` and `_deleted_at` set to the detection time. A key that
-reappears is restored. Known keys come from the destination (`pipeline.dataset()`).
+reappears is restored. Known keys come from the destination, read with its SQL client.
 
 `include_inactive=true` and `include_deceased=true` are always sent. Without them SKY
 hides inactive and deceased records, and reconciliation would tombstone them.
