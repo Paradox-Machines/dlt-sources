@@ -1,0 +1,12 @@
+[
+  {"companyId": "RM", "transactionNumber": 1500048427, "period": 202607,
+   "additionalInformation": {"sequenceNumber": 1, "status": "N"},
+   "accountingInformation": {"account": "4000", "accountingDimension1": "CC100", "accountingDimension2": "F10"},
+   "amounts": {"amount": 1250.0, "currencyAmount": 1250.0},
+   "lastUpdated": {"updatedAt": "2026-07-03T14:00:00.1234567Z", "updatedBy": "SYSTEM"}},
+  {"companyId": "RM", "transactionNumber": 1500048427, "period": 202607,
+   "additionalInformation": {"sequenceNumber": 2, "status": "N"},
+   "accountingInformation": {"account": "1100", "accountingDimension1": "CC100", "accountingDimension2": "F10"},
+   "amounts": {"amount": -1250.0, "currencyAmount": -1250.0},
+   "lastUpdated": {"updatedAt": "2026-07-03T14:00:00Z", "updatedBy": "SYSTEM"}}
+]

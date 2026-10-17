@@ -65,6 +65,7 @@ for `duckdb`. Run `dlt init --list-sources --location <url>` to enumerate.
 | [quickbooks](paradox_dlt_sources/quickbooks/README.md) | beta | 24 entities (invoices, customers, accounts, transactions, …) |
 | [servicetitan](paradox_dlt_sources/servicetitan/README.md) | beta | multi-tenant: jobs, appointments, projects, customers, locations, invoices, payments, purchase_orders, estimates, technicians, form_submissions, … |
 | [stripe](paradox_dlt_sources/stripe/README.md) | beta | charges, customers, invoices, refunds, invoice_line_items |
+| [unit4_erp](paradox_dlt_sources/unit4_erp/README.md) | alpha | multi-company: general_ledger_transactions, accounts, attribute_values, planner_transactions, suppliers, customers, bank_statements, projects, employees, positions, field_definitions, … |
 
 More sources coming as we port them from our internal pipeline. See
 [CONTRIBUTING.md](CONTRIBUTING.md) for the porting checklist.
