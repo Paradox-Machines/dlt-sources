@@ -41,13 +41,16 @@
 | paradox\_dlt\_sources/quickbooks/\_\_init\_\_.py      |       47 |        0 |    100% |           |
 | paradox\_dlt\_sources/quickbooks/helpers.py           |       85 |        1 |     99% |       263 |
 | paradox\_dlt\_sources/quickbooks/settings.py          |        8 |        0 |    100% |           |
+| paradox\_dlt\_sources/raisers\_edge/\_\_init\_\_.py   |      163 |        8 |     95% |74, 117, 274, 356, 379, 405, 429, 536 |
+| paradox\_dlt\_sources/raisers\_edge/helpers.py        |      229 |        5 |     98% |204-205, 410, 456-457 |
+| paradox\_dlt\_sources/raisers\_edge/settings.py       |       37 |        0 |    100% |           |
 | paradox\_dlt\_sources/servicetitan/\_\_init\_\_.py    |       67 |        4 |     94% |138, 198-205 |
 | paradox\_dlt\_sources/servicetitan/helpers.py         |      114 |        3 |     97% |197, 216, 229 |
 | paradox\_dlt\_sources/servicetitan/settings.py        |       40 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/\_\_init\_\_.py          |       33 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/helpers.py               |       62 |        0 |    100% |           |
 | paradox\_dlt\_sources/stripe/settings.py              |        3 |        0 |    100% |           |
-| **TOTAL**                                             | **2214** |   **76** | **97%** |           |
+| **TOTAL**                                             | **2643** |   **89** | **97%** |           |
 
 
 ## Setup coverage badge
