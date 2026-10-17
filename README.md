@@ -63,6 +63,7 @@ for `duckdb`. Run `dlt init --list-sources --location <url>` to enumerate.
 | [notion](paradox_dlt_sources/notion/README.md) | beta | users, databases, pages, blocks, comments |
 | [pipedrive](paradox_dlt_sources/pipedrive/README.md) | beta | persons, deals, leads, activities, organizations, stages, users_recents |
 | [quickbooks](paradox_dlt_sources/quickbooks/README.md) | beta | 24 entities (invoices, customers, accounts, transactions, …) |
+| [raisers_edge](paradox_dlt_sources/raisers_edge/README.md) | beta | Raiser's Edge NXT (SKY API): constituents and contact details, gifts and splits, campaigns/funds/appeals, events and participants, memberships, actions, opportunities; L2 (cursor + delete reconciliation) |
 | [servicetitan](paradox_dlt_sources/servicetitan/README.md) | beta | multi-tenant: jobs, appointments, projects, customers, locations, invoices, payments, purchase_orders, estimates, technicians, form_submissions, … |
 | [stripe](paradox_dlt_sources/stripe/README.md) | beta | charges, customers, invoices, refunds, invoice_line_items |
 
