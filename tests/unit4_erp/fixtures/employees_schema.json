@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "x-u4-keys": ["companyId", "personId"],
+  "properties": {
+    "companyId": {"type": "string", "title": "Company", "x-u4-filterable": {"filterable": true}, "x-u4-mandatory": true},
+    "personId": {"type": "string", "title": "Resource", "x-u4-filterable": {"filterable": true}, "x-u4-mandatory": true},
+    "birthDate": {"type": "string", "format": "date-time", "title": "Birth date"},
+    "lastUpdated": {"type": "object", "properties": {
+      "updatedAt": {"type": "string", "format": "date-time", "title": "Date and time for last changes."},
+      "updatedBy": {"type": "string"}}},
+    "customFieldGroups": {"type": "object", "properties": {
+      "ipeds": {"type": "object", "properties": {
+        "raceEthnicity": {"type": "string", "title": "IPEDS race/ethnicity"},
+        "tenureStatus": {"type": "string", "title": "Tenure status"}}}}}
+  }
+}

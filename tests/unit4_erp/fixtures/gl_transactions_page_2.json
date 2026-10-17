@@ -1,0 +1,7 @@
+[
+  {"companyId": "RM", "transactionNumber": 1500048428, "period": 202607,
+   "additionalInformation": {"sequenceNumber": 1, "status": "N"},
+   "accountingInformation": {"account": "5000", "accountingDimension1": "CC200", "accountingDimension2": "F10"},
+   "amounts": {"amount": 80.5, "currencyAmount": 80.5},
+   "lastUpdated": {"updatedAt": "2026-07-04T09:30:00Z", "updatedBy": "jdoe"}}
+]
