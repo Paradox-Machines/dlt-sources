@@ -127,7 +127,8 @@ def test_merge_on_rerun_keeps_one_row_per_tenant_and_id(tmp_pipeline: Any) -> No
     assert rows == [("111", 42, "Completed"), ("222", 42, "Completed")]
 
 
-def test_incremental_second_run_sends_previous_high_water_mark(tmp_pipeline: Any) -> None:
+def test_incremental_second_run_sends_high_water_mark_minus_lag(tmp_pipeline: Any) -> None:
+    # The one-hour lag re-reads records modified while the previous run paged.
     url = _url(_INTERSTATE, "jpm", "job-types")
     with responses.RequestsMock() as rsps:
         _register_token(rsps)
@@ -166,7 +167,7 @@ def test_incremental_second_run_sends_previous_high_water_mark(tmp_pipeline: Any
                         "active": "Any",
                         "page": "1",
                         "pageSize": "500",
-                        "modifiedOnOrAfter": "2024-03-05T10:00:00Z",
+                        "modifiedOnOrAfter": "2024-03-05T09:00:00Z",
                     },
                 )
             ],
@@ -207,7 +208,7 @@ def test_incremental_state_is_per_tenant(tmp_pipeline: Any) -> None:
             for c in rsps.calls
             if c.request.url.startswith(_API)
         }
-    assert sent == {"111": "2024-05-01T00:00:00Z", "222": "2023-01-01T00:00:00Z"}
+    assert sent == {"111": "2024-04-30T23:00:00Z", "222": "2022-12-31T23:00:00Z"}
 
 
 def test_start_date_seeds_first_run(tmp_pipeline: Any) -> None:
@@ -352,7 +353,7 @@ def test_form_submissions_incremental_on_submitted_on(tmp_pipeline: Any) -> None
             json={"hasMore": False, "data": []},
             match=[
                 matchers.query_param_matcher(
-                    {"submittedOnOrAfter": "2024-03-02T09:00:00Z"}, strict_match=False
+                    {"submittedOnOrAfter": "2024-03-02T08:00:00Z"}, strict_match=False
                 )
             ],
         )
@@ -421,3 +422,28 @@ def test_tenants_resolve_from_config(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("SOURCES__SERVICETITAN__APP_KEY", "app-key")
     source = servicetitan_source(resources=["jobs"])
     assert list(source.resources.keys()) == ["jobs_111"]
+
+
+def test_contacts_keyed_by_customer_link(tmp_pipeline: Any) -> None:
+    """One contact id shared by two customers keeps both links."""
+    url = _url(_INTERSTATE, "crm", "export/customers/contacts")
+    with responses.RequestsMock() as rsps:
+        _register_token(rsps)
+        rsps.add(
+            responses.GET,
+            url,
+            json={
+                "hasMore": False,
+                "continueFrom": "t1",
+                "data": [
+                    {"id": 7, "customerId": 100, "type": "Phone", "value": "555-0100"},
+                    {"id": 7, "customerId": 200, "type": "Phone", "value": "555-0100"},
+                ],
+            },
+        )
+        tmp_pipeline.run(_source([_INTERSTATE], ["contacts"]))
+
+    rows = _query(tmp_pipeline, "SELECT customer_id, id FROM contacts ORDER BY customer_id")
+    assert rows == [(100, 7), (200, 7)]
+    key = tmp_pipeline.default_schema.get_table("contacts")["columns"]
+    assert [c for c, d in key.items() if d.get("primary_key")] == ["tenant_id", "id", "customer_id"]

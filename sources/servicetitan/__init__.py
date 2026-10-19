@@ -66,7 +66,7 @@ from .settings import (
     ENDPOINTS,
     ENDPOINTS_BY_NAME,
     EXPORT_FROM_PARAM,
-    PRIMARY_KEY,
+    INCREMENTAL_LAG_SECONDS,
     Endpoint,
 )
 
@@ -158,7 +158,7 @@ def _make_resource(
     resource_kwargs: Mapping[str, Any] = {
         "name": f"{endpoint.name}_{tenant.tenant_id}",
         "table_name": endpoint.name,
-        "primary_key": PRIMARY_KEY,
+        "primary_key": endpoint.key,
         "write_disposition": "merge",
         "columns": columns(endpoint),
     }
@@ -182,6 +182,7 @@ def _make_resource(
                 endpoint.cursor_field,
                 initial_value=initial_value,
                 on_cursor_value_missing="include",
+                lag=INCREMENTAL_LAG_SECONDS,
             ),
         ) -> Iterator[list[Row]]:
             params = dict(endpoint.params)

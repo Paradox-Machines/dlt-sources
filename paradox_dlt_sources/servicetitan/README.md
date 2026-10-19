@@ -4,6 +4,8 @@ ServiceTitan dlt source — loads **several ServiceTitan tenants** (one per
 operating company) into one set of tables. Every row is tagged with
 `tenant_id` + `tenant_name`, and every primary key is compound
 `(tenant_id, id)`, because ServiceTitan ids are only unique within a tenant.
+`contacts` is keyed `(tenant_id, customer_id, id)`: one contact can be linked
+to several customers and the export repeats its id once per customer.
 
 API reference: <https://developer.servicetitan.io/apis/>
 
@@ -11,7 +13,8 @@ API reference: <https://developer.servicetitan.io/apis/>
 
 One dlt resource per (endpoint, tenant), named `{endpoint}_{tenant_id}` (e.g.
 `jobs_1234567`), writing to the shared `{endpoint}` table. All tables use
-`write_disposition="merge"` on `(tenant_id, id)`.
+`write_disposition="merge"` on `(tenant_id, id)` (`contacts`: `(tenant_id,
+customer_id, id)`).
 
 | Table | Module | Endpoint (under `/{module}/v2/tenant/{tenant}/`) | Pagination | Incremental | Scope on the ServiceTitan app |
 |---|---|---|---|---|---|
@@ -62,7 +65,9 @@ inherits a busier tenant's high-water mark.
   incremental on `submittedOn` via `submittedOnOrAfter`. The filter is
   `cursor.start_value` — the stable high-water mark from the *previous* run —
   **not** `cursor.last_value`, which shifts mid-extract and would silently drop
-  rows (the repo-wide convention). `start_date` seeds the first run.
+  rows (the repo-wide convention). The cursor carries a one-hour `lag`, so a
+  record modified while the previous run was paging (older than that run's
+  newest row) is read again. `start_date` seeds the first run.
 
 ### Errors and rate limits
 

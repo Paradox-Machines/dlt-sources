@@ -89,6 +89,7 @@ class Endpoint:
             Always loaded in full: ``start_date`` would otherwise drop every
             row not modified since that date, and later incremental runs never
             backfill them.
+        primary_key: Compound key; ``None`` means :data:`PRIMARY_KEY`.
     """
 
     name: str
@@ -102,6 +103,11 @@ class Endpoint:
     params: Mapping[str, str] = field(default_factory=dict)
     columns: Mapping[str, str] = field(default_factory=dict)
     reference: bool = False
+    primary_key: tuple[str, ...] | None = None
+
+    @property
+    def key(self) -> tuple[str, ...]:
+        return self.primary_key or PRIMARY_KEY
 
 
 # Column hints every table carries, so tenant tagging and the compound key
@@ -114,6 +120,11 @@ BASE_COLUMNS: Mapping[str, str] = {
 }
 
 PRIMARY_KEY = ("tenant_id", "id")
+
+# Overlap re-read before the saved cursor on ``page`` incrementals. A record
+# modified while a run is paging carries a ``modifiedOn`` older than the run's
+# newest row; without the overlap the next run's ``modifiedOnOrAfter`` skips it.
+INCREMENTAL_LAG_SECONDS = 3600
 
 EXPORT_FROM_PARAM = "from"
 
@@ -162,6 +173,9 @@ ENDPOINTS: tuple[Endpoint, ...] = (
         "export",
         "CRM: Customers (read)",
         columns={"customer_id": "bigint"},
+        # One contact (phone, email) can be linked to several customers; the
+        # export repeats its id once per customer, so the link is part of the key.
+        primary_key=("tenant_id", "customer_id", "id"),
     ),
     Endpoint("bookings", "crm", "export/bookings", "export", "CRM: Bookings (read)"),
     # --- accounting ----------------------------------------------------------
