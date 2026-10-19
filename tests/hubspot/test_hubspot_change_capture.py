@@ -182,3 +182,21 @@ def test_first_run_lands_everything() -> None:
     window = ChangeWindow({}, "updatedAt", timedelta(hours=1))
     assert window.admit("a", "1999-01-01T00:00:00Z") is True
     assert window.admit("b", None) is True
+
+
+def test_unreadable_destination_skips_reconciliation(
+    tmp_path: Path, name: str, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    p = _pipeline(tmp_path, name)
+    _run(p, [_deal("1", "2026-01-01T00:00:00Z"), _deal("2", "2026-01-01T00:00:00Z")])
+
+    def boom(*_: Any, **__: Any) -> Any:
+        raise OSError("s3 unreachable")
+
+    monkeypatch.setattr("paradox_dlt_sources.hubspot.helpers._query", boom)
+    _run(p, [_deal("1", "2026-01-01T00:00:00Z"), _deal("3", "2026-06-01T00:00:00Z")])
+
+    assert "skipping delete reconciliation" in caplog.text
+    latest = _latest(p)
+    assert latest["2"][2] is False
+    assert "3" in latest

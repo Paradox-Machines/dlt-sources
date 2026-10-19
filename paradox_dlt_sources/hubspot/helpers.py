@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 from collections.abc import Iterator
 from datetime import timedelta
 from typing import Any
@@ -14,6 +15,8 @@ from dlt.sources.helpers.rest_client.paginators import BasePaginator
 from requests import Request, Response
 
 Row = dict[str, Any]
+
+logger = logging.getLogger(__name__)
 
 
 def nullable_column(data_type: str) -> dict[str, Any]:
@@ -149,17 +152,28 @@ def tombstones(
         return
     with pipeline.sql_client() as client:
         qualified = client.make_qualified_table_name(table)
-    latest = (
-        f"SELECT *, row_number() OVER (PARTITION BY {key} "
-        f"ORDER BY try_cast(_dlt_load_id AS DOUBLE) DESC, _dlt_id DESC) AS _hs_rn "
-        f"FROM {qualified}"
+    rank = (
+        f"row_number() OVER (PARTITION BY {key} "
+        f"ORDER BY try_cast(_dlt_load_id AS DOUBLE) DESC, _dlt_id DESC) AS _hs_rn"
     )
+    latest = f"SELECT *, {rank} FROM {qualified}"
     try:
         _, live_rows = _query(
             pipeline,
-            f"SELECT {key} FROM ({latest}) WHERE _hs_rn = 1 AND NOT coalesce(_is_deleted, false)",
+            f"SELECT {key} FROM (SELECT {key}, _is_deleted, {rank} FROM {qualified}) "
+            "WHERE _hs_rn = 1 AND NOT coalesce(_is_deleted, false)",
         )
     except DatabaseUndefinedRelation:
+        return
+    except Exception:
+        # Delete detection must not cost the run its changes: deletes are
+        # picked up by the next run that can read the destination.
+        logger.warning(
+            "hubspot: %s: could not read live keys from the destination; "
+            "skipping delete reconciliation this run",
+            table,
+            exc_info=True,
+        )
         return
     live = {r[0] for r in live_rows}
     missing = sorted(live - seen)
