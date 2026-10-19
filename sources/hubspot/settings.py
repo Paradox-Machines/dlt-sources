@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import timedelta
+
 HUBSPOT_API_BASE_URL = "https://api.hubapi.com"
 
 # CRM v3 list endpoint page size
@@ -14,6 +16,12 @@ ENGAGEMENTS_PAGE_LIMIT = 250
 # always strictly greater, so this is the "load everything" starting point
 # on a never-run pipeline.
 EPOCH_ISO = "1970-01-01T00:00:00Z"
+
+# Change-capture overlap re-read before the saved cursor (covers clock skew).
+DEFAULT_LOOKBACK = timedelta(hours=1)
+
+# Largest share of a table's live keys one run may tombstone as deleted.
+DEFAULT_MAX_DELETE_SHARE = 0.5
 
 # Property whitelists per CRM v3 object — HubSpot only returns the listed
 # properties (plus a small default set), so any field the staging models

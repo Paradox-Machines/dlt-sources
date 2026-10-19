@@ -24,28 +24,42 @@ Pagination:
 
 - CRM v3: cursor at ``paging.next.after``, set as ``?after=``.
 - Engagements v1: server-supplied ``offset`` field with ``hasMore`` flag.
+
+Change capture and deletes:
+
+- Neither list endpoint filters by modification time, so every run walks the
+  whole collection. A :class:`~.helpers.ChangeWindow` lands only rows changed
+  since the saved cursor minus ``lookback``, and never advances the cursor
+  past the run's start, so a record edited mid-walk is caught next run.
+- Because the walk is complete, any key live in the destination but absent
+  from the walk was deleted (or merged away) in HubSpot. It is landed again
+  as a tombstone (``_is_deleted=True``, ``_deleted_at``), guarded by
+  ``max_delete_share``.
 """
 
 from __future__ import annotations
 
 import json
 from collections.abc import Iterator
+from datetime import timedelta
 from typing import Any
 
 import dlt
+import pendulum
 from dlt.sources.helpers.rest_client.auth import BearerTokenAuth
 from dlt.sources.helpers.rest_client.client import RESTClient
 from dlt.sources.helpers.rest_client.paginators import JSONResponseCursorPaginator
 
-from .helpers import EngagementsOffsetPaginator, columns
+from .helpers import ChangeWindow, EngagementsOffsetPaginator, columns, delete_columns, tombstones
 from .settings import (
     COMPANY_PROPERTIES,
     CONTACT_PROPERTIES,
     CRM_OBJECT_PROPERTIES,
     CRM_PAGE_LIMIT,
     DEAL_PROPERTIES,
+    DEFAULT_LOOKBACK,
+    DEFAULT_MAX_DELETE_SHARE,
     ENGAGEMENTS_PAGE_LIMIT,
-    EPOCH_ISO,
     HUBSPOT_API_BASE_URL,
 )
 
@@ -59,17 +73,20 @@ def _crm_object_columns(text_props: tuple[str, ...]) -> dict[str, dict[str, Any]
 
 
 _OBJECT_COLUMNS: dict[str, dict[str, dict[str, Any]]] = {
-    "companies": _crm_object_columns(COMPANY_PROPERTIES),
-    "contacts": _crm_object_columns(CONTACT_PROPERTIES),
-    "deals": _crm_object_columns(DEAL_PROPERTIES),
-    "engagements": columns(
-        text=(
-            "body_preview",
-            "associations__contact_ids",
-            "associations__company_ids",
-            "associations__deal_ids",
-        )
-    ),
+    "companies": {**_crm_object_columns(COMPANY_PROPERTIES), **delete_columns()},
+    "contacts": {**_crm_object_columns(CONTACT_PROPERTIES), **delete_columns()},
+    "deals": {**_crm_object_columns(DEAL_PROPERTIES), **delete_columns()},
+    "engagements": {
+        **columns(
+            text=(
+                "body_preview",
+                "associations__contact_ids",
+                "associations__company_ids",
+                "associations__deal_ids",
+            )
+        ),
+        **delete_columns(),
+    },
     "deal_pipelines": columns(text=("stages",)),
 }
 
@@ -94,10 +111,30 @@ def _flatten_engagement(item: Row) -> Row:
     }
 
 
+def _reconciled(
+    table: str,
+    cursor_path: str,
+    rows: Iterator[Row],
+    lookback: timedelta,
+    max_delete_share: float,
+) -> Iterator[Row]:
+    """Land changed rows from a complete walk, then tombstone keys that vanished."""
+    window = ChangeWindow(dlt.current.resource_state(), cursor_path, lookback)
+    for row in rows:
+        if window.admit(row["id"], row.get(cursor_path)):
+            yield {**row, "_is_deleted": False, "_deleted_at": None}
+    yield from tombstones(
+        table, "id", window.seen, pendulum.now("UTC"), max_delete_share=max_delete_share
+    )
+    window.commit()
+
+
 @dlt.source(name="hubspot")
 def hubspot_source(
     api_key: str = dlt.secrets.value,
     base_url: str = HUBSPOT_API_BASE_URL,
+    lookback_seconds: float = DEFAULT_LOOKBACK.total_seconds(),
+    max_delete_share: float = DEFAULT_MAX_DELETE_SHARE,
 ) -> list[Any]:
     """HubSpot source factory — yields companies, contacts, deals,
     engagements, and deal_pipelines.
@@ -106,7 +143,12 @@ def hubspot_source(
         api_key: HubSpot Private App access token (Bearer auth).
                  Resolved from secrets by default.
         base_url: API base URL — override for testing.
+        lookback_seconds: Overlap re-read before the saved cursor each run,
+            covering clock skew between HubSpot and this process.
+        max_delete_share: Largest share of a table's live keys one run may
+            tombstone; a larger gap raises instead (truncated read guard).
     """
+    lookback = timedelta(seconds=lookback_seconds)
     auth = BearerTokenAuth(api_key)
 
     crm_client = RESTClient(
@@ -130,29 +172,27 @@ def hubspot_source(
             write_disposition="append",
             columns=_OBJECT_COLUMNS[object_name],
         )
-        def _r(
-            cursor: Any = dlt.sources.incremental(  # noqa: B008
-                # Top-level ``updatedAt`` is set by HubSpot on every CRM v3
-                # record and always present.  ``properties.hs_lastmodifieddate``
-                # can be null for never-modified records — that null tripped
-                # dlt's IncrementalCursorPathHasValueNone in a staging run.
-                # Airbyte's manifest uses ``updatedAt`` for the same reason.
-                "updatedAt",
-                initial_value=EPOCH_ISO,
-                range_start="open",
-            ),
-        ) -> Iterator[Row]:
+        def _r() -> Iterator[Row]:
+            # Top-level ``updatedAt`` is set by HubSpot on every CRM v3 record
+            # and always present.  ``properties.hs_lastmodifieddate`` can be
+            # null for never-modified records.  ``archived=false`` leaves
+            # deleted records out of the walk, which is what lets
+            # reconciliation tombstone them.
             params = {
                 "limit": CRM_PAGE_LIMIT,
                 "properties": ",".join(CRM_OBJECT_PROPERTIES[object_name]),
                 "archived": "false",
             }
-            for page in crm_client.paginate(
-                f"/crm/v3/objects/{object_name}",
-                params=params,
-                data_selector="results",
-            ):
-                yield from page
+
+            def rows() -> Iterator[Row]:
+                for page in crm_client.paginate(
+                    f"/crm/v3/objects/{object_name}",
+                    params=params,
+                    data_selector="results",
+                ):
+                    yield from page
+
+            yield from _reconciled(object_name, "updatedAt", rows(), lookback, max_delete_share)
 
         return _r
 
@@ -162,23 +202,20 @@ def hubspot_source(
         write_disposition="append",
         columns=_OBJECT_COLUMNS["engagements"],
     )
-    def engagements(
-        cursor: Any = dlt.sources.incremental(  # noqa: B008
-            "lastUpdated",
-            initial_value=0,
-            range_start="open",
-        ),
-    ) -> Iterator[Row]:
+    def engagements() -> Iterator[Row]:
         # Legacy v1 endpoint preserves the unified engagement shape (one
         # row per call/email/meeting/note/task with a ``type`` discriminator
         # column) that the staging model relies on.
-        for page in engagements_client.paginate(
-            "/engagements/v1/engagements/paged",
-            params={"limit": ENGAGEMENTS_PAGE_LIMIT},
-            data_selector="results",
-        ):
-            for item in page:
-                yield _flatten_engagement(item)
+        def rows() -> Iterator[Row]:
+            for page in engagements_client.paginate(
+                "/engagements/v1/engagements/paged",
+                params={"limit": ENGAGEMENTS_PAGE_LIMIT},
+                data_selector="results",
+            ):
+                for item in page:
+                    yield _flatten_engagement(item)
+
+        yield from _reconciled("engagements", "lastUpdated", rows(), lookback, max_delete_share)
 
     @dlt.resource(
         name="deal_pipelines",
